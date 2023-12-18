@@ -3,6 +3,25 @@ require(__DIR__.'/../model/DbModel.class.php');
 ?>
 <section>
     <h2>Votre horaire</h2>
+<?php
+if (!isset($_SESSION['id_employe'])){ //Si l'employé n'est pas connecté
+    header('Location:index.php?page=login.php'); //On le redirige vers la page de connexion
+    exit();
+}
+$db=new DbModel('localhost','projet_gr5','root',''); //Connexion à la base de données
+$pdo = $db->get_pdo();
+$req=$pdo->prepare('SELECT admin FROM employes WHERE id_employe=:id'); //Requête pour savoir si l'employé est admin
+$req->bindValue(':id',$_SESSION['id_employe']); //On récupère l'id de l'employé dans la session
+$req->execute();
+$req->setFetchMode(PDO::FETCH_OBJ);
+$result=$req->fetch();
+if($result->admin==1){ //Si l'employé est admin
+    echo '<a href="index.php?page=gestion.php">Administration</a>'; //On affiche le lien vers l'administration
+}
+$req->closeCursor();
+?>
+<a href="index.php?page=login.php">Deconnexion</a>
+<div>
 <table>
     <?php
     $db=new DbModel('localhost','projet_gr5','root',''); //Connexion à la base de données
@@ -44,4 +63,5 @@ require(__DIR__.'/../model/DbModel.class.php');
     }
     ?>
 </table>
+</div>
 </section>
