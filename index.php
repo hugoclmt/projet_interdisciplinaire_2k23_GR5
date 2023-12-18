@@ -1,5 +1,7 @@
 <?php
 session_start();
+require './src/controller/UserController.class.php';
+$controller = new UserController()
 ?>
 <!DOCTYPE html>
 <html lang="fr">

@@ -40,7 +40,7 @@ class LdapConnexion {
                 return $this->verifierAppartenanceGroupe($name, "cn=Administrateurs,ou=groupes,dc=SERVEUR_GR5,dc=lan", "dc=SERVEUR_GR5,dc=lan"); //si l'user existe on appelle la methode appartenancegroupe pour verif si l'user appaartient a admin oj pas
             }
         }
-        return false;
+        return null;
     }
 
     private function verifierAppartenanceGroupe($username, $group_dn, $base_dn) { //methode pour verifier si un user appartient au groupe admin
