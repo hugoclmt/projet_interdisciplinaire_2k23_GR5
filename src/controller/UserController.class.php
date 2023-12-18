@@ -17,7 +17,7 @@ class UserController
         $mdpNettoye = htmlspecialchars($mdp);
         if(!empty($nameNettoye) && !empty($mdpNettoye)) //si les variables ne sont pas vide
         {
-             $result = $this->activeDirectory->authentification($nameNettoye,$mdpNettoye);
+             $result = $this->activeDirectory->authentification($nameNettoye,$mdpNettoye); //on appelle le modele ldapConnexion avec sa methode authentification
              if ($result === true)
              {
                  //TODO utilisateur connecte en tant que admin

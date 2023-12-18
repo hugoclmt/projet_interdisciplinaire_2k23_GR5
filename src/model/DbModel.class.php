@@ -1,6 +1,6 @@
 <?php
 
-class dbModel
+class DbModel
 {
     private $host;
     private $dbName;
@@ -8,11 +8,11 @@ class dbModel
     private $mdp;
     private $pdo;
 
-    public function __construct($host,$dbName,$user,$mdp){ //appele lors de l'instanciation
-        $this->host = $host; //nom de hote
-        $this->dbName = $dbName; //nom de la db
-        $this->user = $user; //nom de l'user
-        $this->mdp = $mdp; //mdp
+    public function __construct(){ //appele lors de l'instanciation
+        $this->host = "localhost"; //nom de hote
+        $this->dbName = "testinterdisciplinaire"; //nom de la db
+        $this->user = "root"; //nom de l'user
+        $this->mdp = ""; //mdp
         $this->pdo = null; //pdo
 
         $this->connect(); //appelle la fonction connect lors de l'initialisation de l'objet
