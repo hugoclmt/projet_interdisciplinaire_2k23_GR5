@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 18, 2023 at 11:19 AM
+-- Generation Time: Dec 18, 2023 at 12:14 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -32,8 +32,7 @@ CREATE TABLE `employes` (
   `id_type` int NOT NULL,
   `identifiant` varchar(256) NOT NULL,
   `mdp` varchar(512) NOT NULL,
-  `admin` tinyint(1) NOT NULL,
-  `email` varchar(256) NOT NULL
+  `admin` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -90,7 +89,8 @@ ALTER TABLE `employes`
 -- Indexes for table `jour_horaire`
 --
 ALTER TABLE `jour_horaire`
-  ADD PRIMARY KEY (`id_horaire`);
+  ADD PRIMARY KEY (`id_horaire`),
+  ADD KEY `fk_horaire_employe` (`id_employe`);
 
 --
 -- Indexes for table `type`
@@ -106,7 +106,7 @@ ALTER TABLE `type`
 -- AUTO_INCREMENT for table `employes`
 --
 ALTER TABLE `employes`
-  MODIFY `id_employe` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_employe` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `jour_horaire`
@@ -129,6 +129,12 @@ ALTER TABLE `type`
 --
 ALTER TABLE `employes`
   ADD CONSTRAINT `fk_employes_type` FOREIGN KEY (`id_type`) REFERENCES `type` (`id_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `jour_horaire`
+--
+ALTER TABLE `jour_horaire`
+  ADD CONSTRAINT `fk_horaire_employe` FOREIGN KEY (`id_employe`) REFERENCES `employes` (`id_employe`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
