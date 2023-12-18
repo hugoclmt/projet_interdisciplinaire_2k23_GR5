@@ -19,7 +19,7 @@ session_start();
 <body>
 <?php
 if(!isset($_SESSION['page'])){ //si aucune session page n'existe
-    $_SESSION['page'] = ""; //on la cree -> donc page d'accueil quand on arrive
+    $_SESSION['page'] = "horaire.php"; //on la cree -> donc page d'accueil quand on arrive
 }
 if (isset($_GET['page'])){ //si dans l'url on a un parametre page on le recuoere
     $_SESSION['page'] = $_GET['page']; //on le stock dans la session page
