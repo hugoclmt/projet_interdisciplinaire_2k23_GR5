@@ -1,23 +1,21 @@
 <?php
 
-class EmployeModel
+class EmployeModel extends ParentAbstraite
 {
-    private $db;
+
 
     public function __construct()
     {
-        $database = new DbModel();
-        $this->db = $database->get_pdo();
+        parent::__construct();
     }
 
-    public function demander_conge($date_debut,$date_fin) //fct pour employe qui demande conge
+    public function demander_conge($date_conge) //fct pour employe qui demande conge. date debut conge et date fin conge
     {
         $statut = "En attente"; //on declare la variable statut en attente ->confirmation de l'administateur
         try{
-            $query = "INSERT INTO conge (date_debut,date_fin,statut) VALUES (:date_debut,:date_fin,:statut)"; //rqt prepare pour vesqui injection sql
+            $query = "INSERT INTO conge (date_conge,statut) VALUES (:date_conge,:statut)"; //rqt prepare pour vesqui injection sql
             $resultset = $this->db->prepare($query); //on prep
-            $resultset->bindValue(':date_debut',$date_debut); //on remplace les données
-            $resultset->bindValue(':date_fin',$date_fin);
+            $resultset->bindValue(':date_conge',$date_conge); //on remplace les données
             $resultset->bindValue(':statut',$statut);
             return $resultset->execute(); //on retourne le resultat de la requete si elle a eye bien realisé au pas
         }catch(PDOException $e)
@@ -40,4 +38,21 @@ class EmployeModel
 
         }
     }
+
+    public function recuperer_horaire($id_employe)
+    {
+        $query = "SELECT * FROM horaire WHERE id_employe=:id_employe";
+        $resultset = $this->db->prepare($query);
+        $resultset->bindValue(':id_employe',$id_employe);
+        $resultset->execute();
+        $horaire = $resultset->fetchall(PDO::FETCH_ASSOC);
+        if (!empty($horaire))
+        {
+            return $horaire;
+        }
+        else{
+            return null;
+        }
+    }
+
 }
