@@ -1,6 +1,6 @@
 <?php
 
-class AdministrateurModel extends ParentAbstraite
+class AdministrateurModel extends EmployeModel
 {
 
 
@@ -11,7 +11,7 @@ class AdministrateurModel extends ParentAbstraite
 
     public function get_all_conge(){ //methode pour afficher tout les congé demandé par les employé
         try{
-            $query = "SELECT * FROM conge";
+            $query = "SELECT * from conge";
             $resultset = $this->db->prepare($query);
             $resultset->execute();
 
@@ -33,10 +33,6 @@ class AdministrateurModel extends ParentAbstraite
     public function accepter_conge($id_employe) //methode pour accepter le conge de l'employe
     {
         $statut = "Accepté";
-        $query = "";
-
-
-
         $this->modifier_statut_conge($id_employe,$statut);
     }
 
@@ -44,9 +40,6 @@ class AdministrateurModel extends ParentAbstraite
     public function refuser_conge($id_employe) //methode pour refuser le conge de l'employe
     {
         $statut = "Refusé";
-        $query = "";
-
-
         $this->modifier_statut_conge($id_employe,$statut);
     }
 
@@ -74,7 +67,7 @@ class AdministrateurModel extends ParentAbstraite
 
     }
 
-    public function recuper_employe_type($id_poste)
+    public function recuperer_employe_type($id_poste)
     {
         try{
             $query = "SELECT * FROM employe WHERE id_poste=:id_poste AND actif = true";
@@ -95,7 +88,7 @@ class AdministrateurModel extends ParentAbstraite
         }
     }
 
-    public function creer_horaire()
+    public function creer_horaire($id_employe,)
     {
 
     }
