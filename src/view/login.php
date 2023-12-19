@@ -8,7 +8,7 @@ if(isset($_POST['connexion'])){ //Vérification de la connexion
     $req->execute();
     $req->setFetchMode(PDO::FETCH_OBJ);
     while ($result=$req->fetch() ) {
-        if($result->identifiant==$_POST['username'] && $result->mdp==sha1($_POST['password'])){ //Si l'identifiant et le mdp sont corrects
+        if($result->identifiant==$_POST['username'] && $result->mdp==hash('sha256',($_POST['password']))){ //Si l'identifiant et le mdp sont corrects
             $_SESSION['id_employe']=$result->id_employe; //On enregistre l'id dans la session 
             header('Location:index.php?page=horaire.php');
             exit();
