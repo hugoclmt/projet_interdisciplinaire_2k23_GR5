@@ -10,6 +10,16 @@ if (!isset($_SESSION['id_employe'])){ //Si l'employé n'est pas connecté
 }
 $db=new DbModel('localhost','projet_gr5','root',''); //Connexion à la base de données
 $pdo = $db->get_pdo();
+if (isset($_POST['enregistrer'])){ //Si l'employé a envoyé une demande de congé
+    $req=$pdo->prepare('UPDATE jour_horaire SET conge=1,justification=:comment WHERE date=:date AND id_employe=:id'); //Requête pour mettre à jour la table jour_horaire
+    $req->bindValue(':date',$_POST['date']); //Lier la date à la requête
+    $req->bindValue(':id',$_SESSION['id_employe']); //Lier l'id à la requête
+    $req->bindValue(':comment',$_POST['comment']); //Lier la justification à la requête
+    $req->execute();
+    $req->closeCursor();
+    header('Location:index.php?page=horaire.php'); //On redirige vers la page horaire.php
+    exit();
+}
 $req=$pdo->prepare('SELECT admin FROM employes WHERE id_employe=:id'); //Requête pour savoir si l'employé est admin
 $req->bindValue(':id',$_SESSION['id_employe']); //On récupère l'id de l'employé dans la session
 $req->execute();
@@ -41,27 +51,37 @@ $req->closeCursor();
         $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::LONG, IntlDateFormatter::NONE); //Permet de traduire la date en français
         echo '<tr>';
         echo '<td>',$formatter->format($timestamp),' ','</td>'; //On affiche la date en français
-        echo '<td>De ',$result->debut,' à ',$result->fin,'</td>'; 
-        echo '<td>',$result->nbre_heure,' heures</td>';
-        echo '<td>';
-        if($result->conge==0){ //Si aucune demande n'a été envoyée
-            echo '<a href="">Demander un congé</a>';
-            //TODO Ajouter un controlleur pour la demande de congé
+        echo '<td';
+        if ($result->congeconfirm==1) {echo ' class="conge" ';}
+        echo '>De ',$result->debut,' à ',$result->fin,'</td>'; 
+        echo '<td';
+        if ($result->congeconfirm==1) {echo ' class="conge" ';}
+        echo '>',$result->nbre_heure,' heures</td>';
+        if($result->conge==1){ //Si aucune demande n'a été envoyée  
+            if(!isset($result->congeconfirm)){ //Si la demande n'a pas encore été traitée
+                echo '<td>La demande est en attente</td>';
+            }
+            else if($result->congeconfirm==0){ //Si la demande a été refusée
+                echo '<td>La demande a été refusée</td>';
+            }
+            else if($result->congeconfirm==1){ //Si la demande a été acceptée
+                echo '<td>La demande a été acceptée</td>';
+            }
         }
-        else if($result->conge==1){
-            echo '<a href="">Annuler le congé</a>';
-            
-            if ($result->congeconfirm==0){
-                echo 'La demande a été refusée';
-            }
-            else if ($result->congeconfirm==1){
-                echo 'La demande a été acceptée';
-            }
-        }  
-        echo '</td>';
         echo '</tr>';
     }
     ?>
 </table>
+</div>
+<div>
+<h3>Demander un congé</h3>
+<!-- Créer un formulaire ou l'on peut rentrer une date, rentrer une justification et envoyer la demande -->
+<form method="post">
+    <label for "date">Date :</label>
+    <input type="date" name="date" id="date" required>
+    <label for "comment">Demander un congé :</label>
+            <textarea name="comment" rows=1 cols=30></textarea>
+    <input type="submit" name="enregistrer" value="Envoyer">
+</form>
 </div>
 </section>
