@@ -10,7 +10,7 @@ class DbModel
 
     public function __construct(){ //appele lors de l'instanciation
         $this->host = "localhost"; //nom de hote
-        $this->dbName = "projet_gr5"; //nom de la db
+        $this->dbName = "projet_interdisciplinaire"; //nom de la db
         $this->user = "root"; //nom de l'user
         $this->mdp = ""; //mdp
         $this->pdo = null; //pdo
