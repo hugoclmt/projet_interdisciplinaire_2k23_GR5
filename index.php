@@ -1,6 +1,6 @@
 <?php
 session_start();
-//require './src/controller/UserController.class.php';
+//require __DIR__.'/src/controller/UserController.class.php';
 //$controller = new UserController()
 ?>
 <!DOCTYPE html>

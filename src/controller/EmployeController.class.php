@@ -1,7 +1,7 @@
 <?php
 //controlleur de la classe EmployeModel
 
-require '../model/EmployeModel.class.php';
+require_once __DIR__.'/../model/EmployeModel.class.php';
 
 class EmployeController
 {
@@ -36,5 +36,14 @@ class EmployeController
             return null;
         }
     }
-
+    public function heures_semaine($id_employe,$num_semaine)
+    {
+        $somme_heure = $this->modelemploye->heures_semaine($id_employe,$num_semaine);
+        if ($somme_heure!=null){
+            return $somme_heure;
+        }
+        else{
+            return null;
+        }
+    }
 }

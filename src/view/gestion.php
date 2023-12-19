@@ -1,5 +1,5 @@
 <?php
-require(__DIR__.'/../model/DbModel.class.php');
+require_once(__DIR__.'/../model/DbModel.class.php');
 $db=new DbModel('localhost','projet_gr5','root','');
 $pdo = $db->get_pdo();
 

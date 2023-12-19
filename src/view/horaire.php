@@ -1,13 +1,21 @@
 <?php
-require(__DIR__.'/../model/DbModel.class.php');
-?>
-<section>
-    <h2>Votre horaire</h2>
-<?php
+require(__DIR__.'/../controller/EmployeController.class.php');
+require(__DIR__.'/../model/ParentAbstraite.php');
+$employe = new EmployeController();
+
 if (!isset($_SESSION['id_employe'])){ //Si l'employé n'est pas connecté
     header('Location:index.php?page=login.php'); //On le redirige vers la page de connexion
     exit();
 }
+?>
+<section>
+    <h2>Votre horaire</h2>
+<?php
+$ddateajd = date("Y-m-d"); //On récupère la date d'aujourd'hui
+$dateajd = new DateTime($ddateajd);
+$weekajd = $dateajd->format("W"); //On récupère le numéro de la semaine actuelle
+$nbre_heure_semaine= $employe->heures_semaine($_SESSION['id_employe'],$weekajd); //On récupère le nombre d'heures de la semaine actuelle
+//Ecrit le contenu de la variable $nbre_heure_semaine grace a une boucle
 $db=new DbModel('localhost','projet_gr5','root',''); //Connexion à la base de données
 $pdo = $db->get_pdo();
 if (isset($_POST['enregistrer'])){ //Si l'employé a envoyé une demande de congé
@@ -21,6 +29,7 @@ if (isset($_POST['enregistrer'])){ //Si l'employé a envoyé une demande de cong
     header('Location:index.php?page=horaire.php'); //On redirige vers la page horaire.php
     exit();
 }
+
 $req=$pdo->prepare('SELECT admin FROM employes WHERE id_employe=:id'); //Requête pour savoir si l'employé est admin
 $req->bindValue(':id',$_SESSION['id_employe']); //On récupère l'id de l'employé dans la session
 $req->execute();
@@ -34,13 +43,8 @@ $req->closeCursor();
 <a href="index.php?page=login.php">Deconnexion</a>
 <div>
 <?php
-    $ddateajd = date("Y-m-d"); //On récupère la date d'aujourd'hui
-    $dateajd = new DateTime($ddateajd);
-    $weekajd = $dateajd->format("W");
 echo '<h3> Semaine ',$weekajd,'</h3>'; //On affiche la semaine actuelle
 echo '<table>';
-    $db=new DbModel('localhost','projet_gr5','root',''); //Connexion à la base de données
-    $pdo = $db->get_pdo();
     $req=$pdo->prepare("SELECT jour_horaire.id_employe,jour_horaire.date,
     TIME_FORMAT(`debut`, '%H:%i') as debut,
     TIME_FORMAT(`fin`, '%H:%i') as fin,
