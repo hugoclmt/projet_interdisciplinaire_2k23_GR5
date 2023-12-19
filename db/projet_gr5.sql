@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 18, 2023 at 12:14 PM
--- Server version: 8.0.30
+-- Generation Time: Dec 19, 2023 at 09:17 AM
+-- Server version: 8.2.0
 -- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -32,8 +32,18 @@ CREATE TABLE `employes` (
   `id_type` int NOT NULL,
   `identifiant` varchar(256) NOT NULL,
   `mdp` varchar(512) NOT NULL,
-  `admin` tinyint(1) NOT NULL
+  `admin` tinyint(1) NOT NULL,
+  `nbre_conges` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `employes`
+--
+
+INSERT INTO `employes` (`id_employe`, `id_type`, `identifiant`, `mdp`, `admin`, `nbre_conges`) VALUES
+(2, 3, 'quenon.nicolas', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', 1, 1),
+(3, 1, 'root.root', 'cf2e875d70c402e4aaf32ceb64b1fa6f7396af59', 1, 0),
+(6, 4, 'test.test', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -47,10 +57,20 @@ CREATE TABLE `jour_horaire` (
   `date` date NOT NULL,
   `debut` time NOT NULL,
   `fin` time NOT NULL,
-  `nbre_heure` int NOT NULL,
+  `nbre_heure` time NOT NULL,
   `conge` tinyint(1) NOT NULL,
-  `congeconfirm` varchar(256) NOT NULL
+  `congeconfirm` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `justification` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `jour_horaire`
+--
+
+INSERT INTO `jour_horaire` (`id_horaire`, `id_employe`, `date`, `debut`, `fin`, `nbre_heure`, `conge`, `congeconfirm`, `justification`) VALUES
+(1, 2, '2023-12-18', '08:15:00', '17:30:00', '09:15:00', 0, NULL, NULL),
+(2, 2, '2023-12-19', '08:00:00', '17:00:00', '09:00:00', 1, NULL, 'J\'aimerai un congé ce jour là'),
+(3, 2, '2023-12-20', '08:00:45', '15:00:45', '07:00:00', 1, NULL, 'J\'aimerai un congé aussi');
 
 -- --------------------------------------------------------
 
@@ -106,13 +126,13 @@ ALTER TABLE `type`
 -- AUTO_INCREMENT for table `employes`
 --
 ALTER TABLE `employes`
-  MODIFY `id_employe` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_employe` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `jour_horaire`
 --
 ALTER TABLE `jour_horaire`
-  MODIFY `id_horaire` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_horaire` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `type`
