@@ -217,25 +217,36 @@ if (isset($_POST['voir_employes'])){ //Si l'admin a selectionné une plage horai
     echo '<input type="hidden" name="nbreheure" value="'.$nbreheure.'"></input>';
     
     while ($result=$req->fetch() ) {
-        $nbre_heure_semaine= $employe->heures_semaine($result->id_employe,$week); //On récupère le nombre d'heures de la semaine actuelle
-        $temps=explode(':',$nbre_heure_semaine); //On sépare les heures, les minutes et les secondes
-        $temps = DateInterval::createFromDateString($temps[0].' hours '.$temps[1].' minutes '.$temps[2].' seconds'); //On convertit le string en DateInterval
-        $tempsmax= DateInterval::createFromDateString('38 hours 0 minutes 0 seconds'); //Pour tester si le temps est plus grand que 38 heures
-        if ($temps>$tempsmax){
+        if ($employe->heures_semaine($result->id_employe,$week) == NULL){
             $nomprenom = explode('.',$result->identifiant); //On sépare le nom et le prénom
             echo '<div class=employedispo><input type="checkbox" name="employes[]" value="' 
             .$result->identifiant.'">
             '.ucfirst($nomprenom[0]).' '.ucfirst($nomprenom[1]).', '; //On affiche le prénom et le nom (ucfirst pour mettre la première lettre en majuscule)
-            if ($result->nbre_heure==NULL){
-                echo ' n\'a pas d\'horaire ce jour là</input></div>';
+            echo ' n\'a pas d\'horaire ce jour là</input></div>';
+        }
+        else{
+            $nbre_heure_semaine= $employe->heures_semaine($result->id_employe,$week); //On récupère le nombre d'heures de la semaine actuelle
+            $temps=explode(':',$nbre_heure_semaine); //On sépare les heures, les minutes et les secondes
+            $temps = DateInterval::createFromDateString($temps[0].' hours '.$temps[1].' minutes '.$temps[2].' seconds'); //On convertit le string en DateInterval
+            $tempsmax= DateInterval::createFromDateString('38 hours 0 minutes 0 seconds'); //Pour tester si le temps est plus grand que 38 heures
+            $date = new DateTime('00:00:00'); //On créer une date à 00:00:00 pour pouvoir comparer (car on ne sait pas comparer des DateInterval)
+            
+            if (date_add($date,$temps)>date_add($date,$tempsmax)){ 
+                $nomprenom = explode('.',$result->identifiant); //On sépare le nom et le prénom
+                echo '<div class=employedispo><input type="checkbox" name="employes[]" value="' 
+                .$result->identifiant.'">
+                '.ucfirst($nomprenom[0]).' '.ucfirst($nomprenom[1]).', '; //On affiche le prénom et le nom (ucfirst pour mettre la première lettre en majuscule)
+                if ($result->nbre_heure==NULL){
+                    echo ' n\'a pas d\'horaire ce jour là</input></div>';
+                }
+                else{
+                    $nbre_heure_jour = $result->nbre_heure;
+                    $nbre_heure_jour = substr_replace($nbre_heure_jour,':',-2,0); //On place un ':' entre les heures et les minutes
+                    $nbre_heure_jour = substr_replace($nbre_heure_jour,':',-5,0); //On place un ':' entre les heures et les minutes
+                    echo $nbre_heure_jour.' heures ce jour là</input></div>';  //TODO AJOUTER LA LIMITE DE PERSONNEL
+                }
+                $nbreemployes++;
             }
-            else{
-                $nbre_heure_jour = $result->nbre_heure;
-                $nbre_heure_jour = substr_replace($nbre_heure_jour,':',-2,0); //On place un ':' entre les heures et les minutes
-                $nbre_heure_jour = substr_replace($nbre_heure_jour,':',-5,0); //On place un ':' entre les heures et les minutes
-                echo $nbre_heure_jour.' heures ce jour là</input></div>';  //TODO AJOUTER LA LIMITE DE PERSONNEL
-            }
-            $nbreemployes++;
         }
     }
     echo '<input type="submit" name="selection" value="Valider"></input>';

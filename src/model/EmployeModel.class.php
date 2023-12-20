@@ -53,10 +53,17 @@ class EmployeModel
         $resultset->bindValue(':id_employe',$id_employe);
         $resultset->bindValue(':num_semaine',$num_semaine);
         $resultset->execute();
-        $somme_heure = $resultset->fetch(PDO::FETCH_ASSOC); 
-        $somme_heure = substr_replace($somme_heure,':',-2,0); //On place un ':' entre les minutes et les secondes
-        $somme_heure = substr_replace($somme_heure,':',-5,0); //On place un ':' entre les heures et les minutes
-        $somme_heure = $somme_heure['somme']; //On remplace la liste par un string parce qu'il y a qu'une seule valeur
+        $tableau_resultat = $resultset->fetch(PDO::FETCH_ASSOC); 
+        if ($tableau_resultat == null)
+        {
+            return null;
+        }
+        $tableau_resultat['somme'] = substr_replace($tableau_resultat['somme'],':',-2,0); //On place un ':' entre les minutes et les secondes
+        $tableau_resultat['somme'] = substr_replace($tableau_resultat['somme'],':',-5,0); //On place un ':' entre les heures et les minutes
+        echo $tableau_resultat['somme'];
+        echo get_debug_type($tableau_resultat['somme']);
+        $somme_heure = $tableau_resultat['somme'];
+        
         if (!empty($somme_heure))
         {
             return $somme_heure;
@@ -65,19 +72,5 @@ class EmployeModel
             return null;
         }
     }
-    public function recuperer_nbre_conge($id_employe)
-    {
-        $query="SELECT nbre_conges FROM employes WHERE id_employe=:id_employe";
-        $resultset = $this->db->prepare($query);
-        $resultset->bindValue(':id_employe',$id_employe);
-        $resultset->execute();
-        $result = $resultset->fetch(PDO::FETCH_ASSOC);
-        if ($result)
-        {
-            return (int) $result['nbre_conges'];
-        }
-        else{
-            return 0;
-        }
-    }
+    
 }
