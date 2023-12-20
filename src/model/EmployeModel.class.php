@@ -60,8 +60,6 @@ class EmployeModel
         }
         $tableau_resultat['somme'] = substr_replace($tableau_resultat['somme'],':',-2,0); //On place un ':' entre les minutes et les secondes
         $tableau_resultat['somme'] = substr_replace($tableau_resultat['somme'],':',-5,0); //On place un ':' entre les heures et les minutes
-        echo $tableau_resultat['somme'];
-        echo get_debug_type($tableau_resultat['somme']);
         $somme_heure = $tableau_resultat['somme'];
         
         if (!empty($somme_heure))

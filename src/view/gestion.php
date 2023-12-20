@@ -179,28 +179,30 @@ if (isset($_POST['voir_employes'])){ //Si l'admin a selectionné une plage horai
     $ddate = date($_POST['date']); //On récupère la date
     $date = new DateTime($ddate);
     $week = $date->format("W"); //On récupère le numéro de la semaine de la date fournie pour calculer la somme des heures de la semaine des employés
-
+    $date2=new DateTime($ddate);
     $nbre=$_POST['nbre'];
     // requête SQL pour récuperer les employés disponibles dans la plage horaire selectionnée
     // OU ceux qui ne travaillent pas pendant la plage horaire sélectionnée malgré le fait qu'ils aient plusieurs enregistrements dans leurs horaire (XOR)
     // OU ceux qui n'ont pas d'horaire ce jour là (Pas d'enregistrement dans le join)
-    $req=$pdo->prepare('SELECT employes.id_employe,identifiant,SUM(jour_horaire.nbre_heure) as nbre_heure FROM employes 
-    LEFT OUTER JOIN jour_horaire ON employes.id_employe=jour_horaire.id_employe
-    WHERE jour_horaire.date=:date
-    AND (employes.id_employe NOT IN (
+    $req=$pdo->prepare('SELECT employes.identifiant,jour_horaire.id_employe,SUM(jour_horaire.nbre_heure) as nbre_heure FROM jour_horaire
+    JOIN employes ON employes.id_employe = jour_horaire.id_employe
+    WHERE jour_horaire.id_employe NOT IN 
+    (
+        SELECT employes.id_employe FROM employes
+        JOIN jour_horaire ON employes.id_employe=jour_horaire.id_employe
+        WHERE date = :date
+        GROUP BY employes.id_employe
+    )
+    OR
+    jour_horaire.id_employe NOT IN
+    (
         SELECT jour_horaire.id_employe FROM jour_horaire
         WHERE date=:date AND ((debut <= :h_debut AND ( fin >=:h_debut AND fin <=:h_fin))
         OR ((debut >= :h_debut AND debut <= :h_fin) AND (fin >= :h_debut AND fin <= :h_fin))
         OR (fin>=:h_fin AND (debut>=:h_debut AND debut<=:h_fin))
-        OR (debut<=:h_debut AND fin>=:h_fin)
-                                    )) OR (debut IS NULL OR fin IS NULL))
-        OR (employes.id_employe NOT IN (
-        SELECT employes.id_employe FROM employes
-        LEFT OUTER JOIN jour_horaire ON employes.id_employe=jour_horaire.id_employe
-        WHERE date = :date
-        GROUP BY employes.id_employe)
-        AND id_type=:type)
-        GROUP BY employes.id_employe');
+        OR (debut<=:h_debut AND fin>=:h_fin) OR (debut IS NULL AND fin IS NULL))
+    )
+    GROUP BY id_employe');
     $req->bindValue(':type',$_POST['type']);
     $req->bindValue(':date',$_POST['date']);
     //$req->bindValue(':nbreheure',$nbreheure);
@@ -217,8 +219,10 @@ if (isset($_POST['voir_employes'])){ //Si l'admin a selectionné une plage horai
     echo '<input type="hidden" name="nbreheure" value="'.$nbreheure.'"></input>';
     
     while ($result=$req->fetch() ) {
+        echo $result->id_employe;
         if ($employe->heures_semaine($result->id_employe,$week) == NULL){
             $nomprenom = explode('.',$result->identifiant); //On sépare le nom et le prénom
+            echo $nomprenom[0];
             echo '<div class=employedispo><input type="checkbox" name="employes[]" value="' 
             .$result->identifiant.'">
             '.ucfirst($nomprenom[0]).' '.ucfirst($nomprenom[1]).', '; //On affiche le prénom et le nom (ucfirst pour mettre la première lettre en majuscule)
@@ -226,12 +230,16 @@ if (isset($_POST['voir_employes'])){ //Si l'admin a selectionné une plage horai
         }
         else{
             $nbre_heure_semaine= $employe->heures_semaine($result->id_employe,$week); //On récupère le nombre d'heures de la semaine actuelle
+            echo $nbre_heure_semaine;
             $temps=explode(':',$nbre_heure_semaine); //On sépare les heures, les minutes et les secondes
-            $temps = DateInterval::createFromDateString($temps[0].' hours '.$temps[1].' minutes '.$temps[2].' seconds'); //On convertit le string en DateInterval
-            $tempsmax= DateInterval::createFromDateString('38 hours 0 minutes 0 seconds'); //Pour tester si le temps est plus grand que 38 heures
-            $date = new DateTime('00:00:00'); //On créer une date à 00:00:00 pour pouvoir comparer (car on ne sait pas comparer des DateInterval)
-            
-            if (date_add($date,$temps)>date_add($date,$tempsmax)){ 
+    
+            $temps = new DateInterval('PT'.$temps[0].'H'.$temps[1].'M'.$temps[2].'S'); //On convertit le nombre d'heures en DateInterval (P pour période, T pour temps
+            $tempsmax= new DateInterval('PT38H'); //On convertit le nombre d'heures maximum en DateInterval (P pour période, T pour temps) 
+            $date = new DateTime($_POST['date']); //On convertit la date en DateTime
+            $t1 = date_add($date,$temps); //On ajoute le nombre d'heures de la semaine actuelle à la date
+            $t2 = date_add($date2,$tempsmax); //On ajoute le nombre d'heures maximum à la date
+
+            if ($t1<=$t2){ 
                 $nomprenom = explode('.',$result->identifiant); //On sépare le nom et le prénom
                 echo '<div class=employedispo><input type="checkbox" name="employes[]" value="' 
                 .$result->identifiant.'">
@@ -246,6 +254,9 @@ if (isset($_POST['voir_employes'])){ //Si l'admin a selectionné une plage horai
                     echo $nbre_heure_jour.' heures ce jour là</input></div>';  //TODO AJOUTER LA LIMITE DE PERSONNEL
                 }
                 $nbreemployes++;
+            }
+            else {
+                echo 'Trop d\'heures cette semaine';
             }
         }
     }

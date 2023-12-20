@@ -1,21 +1,11 @@
 <?php
-require(__DIR__.'/../controller/EmployeController.class.php');
-require(__DIR__.'/../model/ParentAbstraite.php');
-
-$employe = new EmployeController();
-
 if (!isset($_SESSION['id_employe'])){ //Si l'employé n'est pas connecté
     header('Location:index.php?page=login.php'); //On le redirige vers la page de connexion
     exit();
 }
-?>
-<section>
-    <h2>Votre horaire</h2>
-<?php
-$ddateajd = date("Y-m-d"); //On récupère la date d'aujourd'hui
-$dateajd = new DateTime($ddateajd);
-$weekajd = $dateajd->format("W"); //On récupère le numéro de la semaine actuelle
-$nbre_heure_semaine= $employe->heures_semaine($_SESSION['id_employe'],$weekajd); //On récupère le nombre d'heures de la semaine actuelle
+require(__DIR__.'/../controller/EmployeController.class.php');
+require(__DIR__.'/../model/ParentAbstraite.php');
+$employe = new EmployeController();
 $db=new DbModel('localhost','projet_gr5','root',''); //Connexion à la base de données
 $pdo = $db->get_pdo();
 if (isset($_POST['enregistrer'])){ //Si l'employé a envoyé une demande de congé
@@ -29,7 +19,24 @@ if (isset($_POST['enregistrer'])){ //Si l'employé a envoyé une demande de cong
     header('Location:index.php?page=horaire.php'); //On redirige vers la page horaire.php
     exit();
 }
+if(isset($_POST['submit-semaine'])){
+    $annee_semaine=explode('-W',$_POST['semaine']); //$annee_semaine[0] contient l'année et $annee_semaine[1] contient le numéro de la semaine
+    $dateajd = new DateTime();
+    $dateajd->setISODate($annee_semaine[0],$annee_semaine[1],1); //year , week num , day
+    echo $dateajd->format('Y-m-d');
+}
+else{
+    $dateajd = new DateTime();
+    $annee_semaine = $dateajd->format("Y-W"); //$annee_semaine[0] contient l'année et $annee_semaine[1] contient le numéro de la semaine
+    $annee_semaine=explode('-',$annee_semaine);
+    $dateajd->setISODate($annee_semaine[0],$annee_semaine[1],1); //year , week num , day
+}
+?>
+<section>
+    <h2>Votre horaire</h2>
+<?php
 
+$nbre_heure_semaine= $employe->heures_semaine($_SESSION['id_employe'],$annee_semaine[1]); //On récupère le nombre d'heures de la semaine actuelle
 $req=$pdo->prepare('SELECT admin FROM employes WHERE id_employe=:id'); //Requête pour savoir si l'employé est admin
 $req->bindValue(':id',$_SESSION['id_employe']); //On récupère l'id de l'employé dans la session
 $req->execute();
@@ -43,51 +50,65 @@ $req->closeCursor();
 <a href="index.php?page=login.php">Deconnexion</a>
 <div>
 <?php
-echo '<h3> Semaine ',$weekajd,'</h3>'; //On affiche la semaine actuelle
+echo '<h3> Semaine ',$annee_semaine[1],'</h3>'; //On affiche la semaine actuelle
 echo '<h4>',$nbre_heure_semaine,' heures cette semaine</h4>'; //On affiche le nombre d'heures de la semaine actuelle
+
+$req=$pdo->prepare("SELECT jour_horaire.id_employe,jour_horaire.date,
+TIME_FORMAT(`debut`, '%H:%i') as debut,
+TIME_FORMAT(`fin`, '%H:%i') as fin,
+TIME_FORMAT(`nbre_heure`, '%H:%i') as nbre_heure,
+congeconfirm,conge
+FROM jour_horaire
+JOIN employes on employes.id_employe = jour_horaire.id_employe
+LEFT OUTER JOIN conges ON conges.id_employe = employes.id_employe AND conges.date = jour_horaire.date
+WHERE jour_horaire.date>=:d_jour AND jour_horaire.date<=:f_jour AND jour_horaire.id_employe = :id
+ORDER BY jour_horaire.date ASC"); //Requête pour récuperer les jours et les horaires
+echo $dateajd->format('Y-m-d').' ';
+$req->bindValue(':id',$_SESSION['id_employe']); //On récupère l'id de l'employé dans la session
+$req->bindValue(':d_jour',$dateajd->format('Y-m-d')); //On récupère la date du jour
+$dateajd->modify('+6 day'); //On ajoute 6 jours à la date du jour
+echo $dateajd->format('Y-m-d').' '; 
+$req->bindValue(':f_jour',$dateajd->format('Y-m-d')); //On récupère la date du jour + 6 jours
+$req->execute();
+$req->setFetchMode(PDO::FETCH_OBJ);
+$formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::LONG, IntlDateFormatter::NONE); //Permet de traduire la date en français
+
+
+
 echo '<table>';
-    $req=$pdo->prepare("SELECT jour_horaire.id_employe,jour_horaire.date,
-    TIME_FORMAT(`debut`, '%H:%i') as debut,
-    TIME_FORMAT(`fin`, '%H:%i') as fin,
-    TIME_FORMAT(`nbre_heure`, '%H:%i') as nbre_heure,
-    congeconfirm,conge
-    FROM jour_horaire
-    JOIN employes on employes.id_employe = jour_horaire.id_employe
-    LEFT OUTER JOIN conges ON conges.id_employe = employes.id_employe AND conges.date = jour_horaire.date
-    WHERE WEEK(jour_horaire.date)=:semaineajd AND jour_horaire.id_employe = :id
-    ORDER BY jour_horaire.date ASC"); //Requête pour récuperer les jours et les horaires
-    $req->bindValue(':id',$_SESSION['id_employe']); //On récupère l'id de l'employé dans la session
-    $req->bindValue(':semaineajd',$weekajd); 
-    $req->execute();
-    $req->setFetchMode(PDO::FETCH_OBJ);
-    $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::LONG, IntlDateFormatter::NONE); //Permet de traduire la date en français
-    while ($result=$req->fetch() ) {
-        $timestamp= strtotime($result->date); //On convertit la date en timestamp
-        echo '<tr>';
-        $date = new DateTime($result->date);
-        $week = $date->format("W");
-        echo '<td>',$formatter->format($timestamp),'</td>'; //On affiche la date en français
-        echo '<td';
-        if ($result->congeconfirm!=NULL) {echo ' class="conge" ';}
-        echo '>De ',$result->debut,' à ',$result->fin,'</td>'; 
-        echo '<td';
-        if ($result->congeconfirm!=NULL) {echo ' class="conge" ';}
-        echo '>',$result->nbre_heure,' heures</td>';
-        if($result->conge!=NULL){ //Si aucune demande n'a été envoyée  
-            if(!isset($result->congeconfirm)){ //Si la demande n'a pas encore été traitée
-                echo '<td>La demande est en attente</td>';
-            }
-            else if($result->congeconfirm==NULL){ //Si la demande a été refusée
-                echo '<td>La demande a été refusée</td>';
-            }
-            else if($result->congeconfirm!=NULL){ //Si la demande a été acceptée
-                echo '<td>La demande a été acceptée</td>';
-            }
+while ($result=$req->fetch() ) {
+    $timestamp= strtotime($result->date); //On convertit la date en timestamp
+    echo '<tr>';
+    echo '<td>',$formatter->format($timestamp),'</td>'; //On affiche la date en français
+    echo '<td';
+    if ($result->congeconfirm!=NULL) {echo ' class="conge" ';}
+    echo '>De ',$result->debut,' à ',$result->fin,'</td>'; 
+    echo '<td';
+    if ($result->congeconfirm!=NULL) {echo ' class="conge" ';}
+    echo '>',$result->nbre_heure,' heures</td>';
+    if($result->conge!=NULL){ //Si aucune demande n'a été envoyée  
+        if(!isset($result->congeconfirm)){ //Si la demande n'a pas encore été traitée
+            echo '<td>La demande est en attente</td>';
         }
-        echo '</tr>';
+        else if($result->congeconfirm==NULL){ //Si la demande a été refusée
+            echo '<td>La demande a été refusée</td>';
+        }
+        else if($result->congeconfirm!=NULL){ //Si la demande a été acceptée
+            echo '<td>La demande a été acceptée</td>';
+        }
     }
-    ?>
+    echo '</tr>';
+}
+echo '</table>';
+
+?>
 </table>
+<p>Voir une autre semaine</p>
+<form method="post">
+    <label for "semaine">Semaine :</label>
+    <input type="week" name="semaine" id="semaine" required>
+    <input type="submit" name="submit-semaine" value="Voir">
+</form>
 </div>
 <div>
 <h3>Demander un congé</h3>
