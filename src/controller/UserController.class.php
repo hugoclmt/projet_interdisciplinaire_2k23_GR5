@@ -1,5 +1,5 @@
 <?php
-require __DIR__.'../model/LdapConnexion.class.php';
+require __DIR__.'/../model/LdapConnexion.class.php';
 
 
 

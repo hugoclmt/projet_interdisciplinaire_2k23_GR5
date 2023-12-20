@@ -1,7 +1,9 @@
 <?php
 require_once(__DIR__.'/../model/DbModel.class.php');
-$db=new DbModel('localhost','projet_gr5','root','');
-$pdo = $db->get_pdo();
+require(__DIR__.'/../controller/EmployeController.class.php');
+$employe = new EmployeController();
+$dbg=new DbModel('localhost','projet_gr5','root','');
+$pdo = $dbg->get_pdo();
 
 $reqadmin=$pdo->prepare('SELECT admin FROM employes WHERE id_employe=:id'); //Requête pour savoir si l'employé est admin
 $reqadmin->bindValue(':id',$_SESSION['id_employe']); //On récupère l'id de l'employé dans la session
@@ -43,7 +45,7 @@ if (isset($_POST['selection'])){ //Si l'admin a selectionné des employés pour 
     exit();
 }
 if (isset($_POST['ajouter'])){ //Si l'admin a ajouté un employé
-    $identifiant=$_POST['nom'].'.'.$_POST['prenom']; //Identifiant = nom.prenom
+    $identifiant=$_POST['prenom'].'.'.$_POST['nom']; //Identifiant = nom.prenom
     $req=$pdo->prepare('INSERT INTO employes (id_type,identifiant,mdp,admin) VALUES (:id_type,:identifiant,:mdp,:admin)');
     $req->bindValue(':id_type',$_POST['type']); //Lier le type à la requête d'insertion
     $req->bindValue(':identifiant',$identifiant); //Lier l'identifiant à la requête d'insertion
@@ -67,8 +69,8 @@ if (isset($_POST['etat'])){ //Si l'admin a accepté ou refusé une demande de co
     $req->execute();
     $req->closeCursor();
     if ($_POST['etat']==1){ //Si l'admin a accepté la demande de congé
-        $req=$pdo->prepare('UPDATE employes SET nbr_conges=nbr_conges+1 WHERE id_employe=:id'); //Augmenter le nombre de congés de 1
-        $req->bindValue(':id',$_POST['id_employe']);
+        $req=$pdo->prepare('UPDATE employes SET nbre_conges=nbre_conges+1 WHERE id_employe=:id'); //Augmenter le nombre de congés de 1
+        $req->bindValue(':id',$_POST['id_employe']); //TODO ERREUR NBRE CONGES
         $req->execute();
         $req->closeCursor();
     }
@@ -135,30 +137,36 @@ if (isset($_POST['etat'])){ //Si l'admin a accepté ou refusé une demande de co
 </div>
 <div>
 <h3>Demandes de congés</h3>
-<table>
-<?php //TODO RETIER CETTE DIV SI IL N'Y AUCUNE DEMANDE DE CONGES
+<?php
 $req=$pdo->prepare('SELECT conge,congeconfirm,conges.date,conges.id_employe,conges.justification,employes.identifiant FROM conges JOIN employes ON employes.id_employe=conges.id_employe WHERE congeconfirm IS NULL AND conge = 1 ORDER BY date ASC');
 $req->execute(); //Requête pour récuperer les demandes de congés en liant les employés et les jours des congés
 $req->setFetchMode(PDO::FETCH_OBJ);
 $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::LONG, IntlDateFormatter::NONE); //Permet de traduire la date en français
-while ($result=$req->fetch() ) {
-    $timestamp= strtotime($result->date); //On convertit la date en timestamp
-    $nomprenom = explode('.',$result->identifiant); //On sépare le nom et le prénom
-    echo '<tr>';
-    echo '<td>',ucfirst($nomprenom[0]),' ',ucfirst($nomprenom[1]),'</td>'; //On affiche le prénom et le nom (ucfirst pour mettre la première lettre en majuscule)
-    echo '<td>',$formatter->format($timestamp),'</td>';
-    echo '<td>',$result->justification,'</td>';
-    echo '<form method="post">';
-    echo '<input type="hidden" name="id_employe" value="'.$result->id_employe.'"></input>';
-    echo '<input type="hidden" name="date" value="'.$result->date.'"></input>';
-    echo '<td><button name="etat" value="1">Accepter</button></td>';
-    echo '<td><button name="etat" value="0">Refuser</button></td>';
-    echo '</form>';
-    echo '</tr>';
+if ($req->rowCount()==0){ //Si il n'y a aucune demande de congé
+    echo '<p>Aucune demande de congé</p>';
+}
+else if($req->rowCount()>>0){ //Si il y a une demande de congé) {
+    while ($result=$req->fetch() ) {
+        $timestamp= strtotime($result->date); //On convertit la date en timestamp
+        $nomprenom = explode('.',$result->identifiant); //On sépare le nom et le prénom
+        echo '<table>';
+        echo '<tr>';
+        echo '<td>',ucfirst($nomprenom[0]),' ',ucfirst($nomprenom[1]),'</td>'; //On affiche le prénom et le nom (ucfirst pour mettre la première lettre en majuscule)
+        echo '<td>',$formatter->format($timestamp),'</td>';
+        echo '<td>',$result->justification,'</td>';
+        echo '<form method="post">';
+        echo '<input type="hidden" name="id_employe" value="'.$result->id_employe.'"></input>';
+        echo '<input type="hidden" name="date" value="'.$result->date.'"></input>';
+        echo '<td><button name="etat" value="1">Accepter</button></td>';
+        echo '<td><button name="etat" value="0">Refuser</button></td>';
+        echo '</form>';
+        echo '</tr>';
+        echo '</table>';
+    }
 }
 $req->closeCursor();
 ?>
-</table>
+
 </div>
 <?php
 if (isset($_POST['voir_employes'])){ //Si l'admin a selectionné une plage horaire et un type d'employés
@@ -167,24 +175,41 @@ if (isset($_POST['voir_employes'])){ //Si l'admin a selectionné une plage horai
     $t1 = new DateTime($_POST['heuredebut'].':00'); //On convertit l'heure de début en DateTime
     $t2 = new DateTime($_POST['heurefin'].':00'); //On convertit l'heure de fin en DateTime
     $nbreheure = $t2->diff($t1)->format('%H:%I:%S'); //On calcule la différence entre les deux heures
-    echo 'Nombre d\'heures : ',$nbreheure,'<br>';
+
+    $ddate = date($_POST['date']); //On récupère la date
+    $date = new DateTime($ddate);
+    $week = $date->format("W"); //On récupère le numéro de la semaine de la date fournie pour calculer la somme des heures de la semaine des employés
+
     $nbre=$_POST['nbre'];
-    // requête SQL pour récuperer les employés disponibles dans la plage horaire selectionnée ou ceux qui ne sont pas JOIN dans la table jour_horaire
-    $req=$pdo->prepare('SELECT employes.id_employe,identifiant,jour_horaire.nbre_heure FROM employes 
+    // requête SQL pour récuperer les employés disponibles dans la plage horaire selectionnée
+    // OU ceux qui ne travaillent pas pendant la plage horaire sélectionnée malgré le fait qu'ils aient plusieurs enregistrements dans leurs horaire (XOR)
+    // OU ceux qui n'ont pas d'horaire ce jour là (Pas d'enregistrement dans le join)
+    $req=$pdo->prepare('SELECT employes.id_employe,identifiant,SUM(jour_horaire.nbre_heure) as nbre_heure FROM employes 
     LEFT OUTER JOIN jour_horaire ON employes.id_employe=jour_horaire.id_employe
-    WHERE id_type=:type 
-    AND jour_horaire.date=:date'); //TODO AJOUTER LA LIMITE DE 38H/SEMAINE
+    WHERE jour_horaire.date=:date
+    AND (employes.id_employe NOT IN (
+        SELECT jour_horaire.id_employe FROM jour_horaire
+        WHERE date=:date AND ((debut <= :h_debut AND ( fin >=:h_debut AND fin <=:h_fin))
+        OR ((debut >= :h_debut AND debut <= :h_fin) AND (fin >= :h_debut AND fin <= :h_fin))
+        OR (fin>=:h_fin AND (debut>=:h_debut AND debut<=:h_fin))
+        OR (debut<=:h_debut AND fin>=:h_fin)
+                                    )) OR (debut IS NULL OR fin IS NULL))
+        OR (employes.id_employe NOT IN (
+        SELECT employes.id_employe FROM employes
+        LEFT OUTER JOIN jour_horaire ON employes.id_employe=jour_horaire.id_employe
+        WHERE date = :date
+        GROUP BY employes.id_employe)
+        AND id_type=:type)
+        GROUP BY employes.id_employe');
     $req->bindValue(':type',$_POST['type']);
     $req->bindValue(':date',$_POST['date']);
-    $req->bindValue(':nbreheure',$nbreheure);
+    //$req->bindValue(':nbreheure',$nbreheure);
     $req->bindValue(':h_debut',$_POST['heuredebut'].':00');
     $req->bindValue(':h_fin',$_POST['heurefin'].':00');
     $req->execute();
     $req->setFetchMode(PDO::FETCH_OBJ);
     $nbreemployes=0;
-    #Form qui contient tout les employés de la requête précédente dans des checkbox, on ne peut pas cocher plus de $nbre checkbox tout en affichant tout les employés
     echo '<form method="post">';
-    //Creer un ensemble de hidden input qui contiennent les variable recues en post
     echo '<input type="hidden" name="date" value="'.$_POST['date'].'"></input>';
     echo '<input type="hidden" name="heuredebut" value="'.$_POST['heuredebut'].':00"></input>';
     echo '<input type="hidden" name="heurefin" value="'.$_POST['heurefin'].':00"></input>';
@@ -192,13 +217,26 @@ if (isset($_POST['voir_employes'])){ //Si l'admin a selectionné une plage horai
     echo '<input type="hidden" name="nbreheure" value="'.$nbreheure.'"></input>';
     
     while ($result=$req->fetch() ) {
-        $nomprenom = explode('.',$result->identifiant); //On sépare le nom et le prénom
-        echo '<div class=employedispo><input type="checkbox" name="employes[]" value="' 
-        .$result->identifiant.'">
-        '.ucfirst($nomprenom[0]).' '.ucfirst($nomprenom[1]).' ' //On affiche le prénom et le nom (ucfirst pour mettre la première lettre en majuscule)
-        .$result->nbre_heure.
-        ' heures ce jour là</input></div><br>';  //TODO AJOUTER LA LIMITE DE PERSONNEL
-        $nbreemployes++;
+        $nbre_heure_semaine= $employe->heures_semaine($result->id_employe,$week); //On récupère le nombre d'heures de la semaine actuelle
+        $temps=explode(':',$nbre_heure_semaine); //On sépare les heures, les minutes et les secondes
+        $temps = DateInterval::createFromDateString($temps[0].' hours '.$temps[1].' minutes '.$temps[2].' seconds'); //On convertit le string en DateInterval
+        $tempsmax= DateInterval::createFromDateString('38 hours 0 minutes 0 seconds'); //Pour tester si le temps est plus grand que 38 heures
+        if ($temps>$tempsmax){
+            $nomprenom = explode('.',$result->identifiant); //On sépare le nom et le prénom
+            echo '<div class=employedispo><input type="checkbox" name="employes[]" value="' 
+            .$result->identifiant.'">
+            '.ucfirst($nomprenom[0]).' '.ucfirst($nomprenom[1]).', '; //On affiche le prénom et le nom (ucfirst pour mettre la première lettre en majuscule)
+            if ($result->nbre_heure==NULL){
+                echo ' n\'a pas d\'horaire ce jour là</input></div>';
+            }
+            else{
+                $nbre_heure_jour = $result->nbre_heure;
+                $nbre_heure_jour = substr_replace($nbre_heure_jour,':',-2,0); //On place un ':' entre les heures et les minutes
+                $nbre_heure_jour = substr_replace($nbre_heure_jour,':',-5,0); //On place un ':' entre les heures et les minutes
+                echo $nbre_heure_jour.' heures ce jour là</input></div>';  //TODO AJOUTER LA LIMITE DE PERSONNEL
+            }
+            $nbreemployes++;
+        }
     }
     echo '<input type="submit" name="selection" value="Valider"></input>';
     echo '</form>';

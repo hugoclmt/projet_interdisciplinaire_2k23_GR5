@@ -1,6 +1,7 @@
 <?php
 require(__DIR__.'/../controller/EmployeController.class.php');
 require(__DIR__.'/../model/ParentAbstraite.php');
+
 $employe = new EmployeController();
 
 if (!isset($_SESSION['id_employe'])){ //Si l'employé n'est pas connecté
@@ -15,7 +16,6 @@ $ddateajd = date("Y-m-d"); //On récupère la date d'aujourd'hui
 $dateajd = new DateTime($ddateajd);
 $weekajd = $dateajd->format("W"); //On récupère le numéro de la semaine actuelle
 $nbre_heure_semaine= $employe->heures_semaine($_SESSION['id_employe'],$weekajd); //On récupère le nombre d'heures de la semaine actuelle
-//Ecrit le contenu de la variable $nbre_heure_semaine grace a une boucle
 $db=new DbModel('localhost','projet_gr5','root',''); //Connexion à la base de données
 $pdo = $db->get_pdo();
 if (isset($_POST['enregistrer'])){ //Si l'employé a envoyé une demande de congé
@@ -44,6 +44,7 @@ $req->closeCursor();
 <div>
 <?php
 echo '<h3> Semaine ',$weekajd,'</h3>'; //On affiche la semaine actuelle
+echo '<h4>',$nbre_heure_semaine,' heures cette semaine</h4>'; //On affiche le nombre d'heures de la semaine actuelle
 echo '<table>';
     $req=$pdo->prepare("SELECT jour_horaire.id_employe,jour_horaire.date,
     TIME_FORMAT(`debut`, '%H:%i') as debut,

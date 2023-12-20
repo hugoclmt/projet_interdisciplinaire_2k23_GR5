@@ -44,28 +44,40 @@ class EmployeModel
     }
     public function heures_semaine($id_employe,$num_semaine)
     {
-        $query = "SELECT nbre_heure FROM jour_horaire WHERE id_employe=:id_employe AND WEEK(date)=:num_semaine";
+        $query = "SELECT jour_horaire.id_employe,SUM(jour_horaire.nbre_heure) AS somme FROM jour_horaire
+        JOIN employes ON employes.id_employe = jour_horaire.id_employe
+        LEFT OUTER JOIN conges ON conges.date = jour_horaire.date
+        WHERE (conges.congeconfirm IS NULL OR conges.congeconfirm=0) AND jour_horaire.id_employe=:id_employe AND WEEK(jour_horaire.date)=:num_semaine
+        GROUP BY jour_horaire.id_employe"; //Requete pour recuperer les heures de la semaine sans compter les congés
         $resultset = $this->db->prepare($query);
         $resultset->bindValue(':id_employe',$id_employe);
         $resultset->bindValue(':num_semaine',$num_semaine);
         $resultset->execute();
-        $somme_heure = $resultset->fetchall(PDO::FETCH_ASSOC);
-        $heures_semaines='00:00:00';
-        $heures_semaine = date_create($heures_semaines);
-        foreach ($somme_heure as $heure) {
-            $heure = date_create($heure['nbre_heure']);
-        }
-        $heures_semaine=array_sum($somme_heure);
-        echo get_debug_type($somme_heure[0]['nbre_heure']);
-        echo $heures_semaine;
-
-
+        $somme_heure = $resultset->fetch(PDO::FETCH_ASSOC); 
+        $somme_heure = substr_replace($somme_heure,':',-2,0); //On place un ':' entre les minutes et les secondes
+        $somme_heure = substr_replace($somme_heure,':',-5,0); //On place un ':' entre les heures et les minutes
+        $somme_heure = $somme_heure['somme']; //On remplace la liste par un string parce qu'il y a qu'une seule valeur
         if (!empty($somme_heure))
         {
             return $somme_heure;
         }
         else{
             return null;
+        }
+    }
+    public function recuperer_nbre_conge($id_employe)
+    {
+        $query="SELECT nbre_conges FROM employes WHERE id_employe=:id_employe";
+        $resultset = $this->db->prepare($query);
+        $resultset->bindValue(':id_employe',$id_employe);
+        $resultset->execute();
+        $result = $resultset->fetch(PDO::FETCH_ASSOC);
+        if ($result)
+        {
+            return (int) $result['nbre_conges'];
+        }
+        else{
+            return 0;
         }
     }
 }

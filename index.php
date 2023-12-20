@@ -1,5 +1,6 @@
 <?php
 session_start();
+require __DIR__.'/src/controller/AdministrateurController.class.php';
 //require __DIR__.'/src/controller/UserController.class.php';
 //$controller = new UserController()
 ?>
@@ -8,7 +9,7 @@ session_start();
 <head>
     <title>Centerpark</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link href="lib/css/style1.css?v=vvvvv" rel="stylesheet">
+    <link href="lib/css/style1.css?v=vvvvvvv" rel="stylesheet">
     <link rel="icon" href="images/icone.png">
 </head>
 <header>
