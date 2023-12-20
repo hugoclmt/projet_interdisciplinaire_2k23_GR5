@@ -1,6 +1,17 @@
 <?php
 require(__DIR__.'/../model/DbModel.class.php');
-
+if (isset($_POST['connexion']))
+{
+    if (!empty($_POST['username']) && !empty($_POST['password']))
+    {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $controller->connexionAD($username,$password);
+    }else{
+        echo "Le nom d'user ou le mot de passe est vide ";
+    }
+}
+/*
 $db=new DbModel('localhost','projet_gr5','root','');
 $pdo = $db->get_pdo();
 if(isset($_POST['connexion'])){ //Vérification de la connexion
@@ -17,6 +28,7 @@ if(isset($_POST['connexion'])){ //Vérification de la connexion
     echo "Identifiant ou mot de passe incorrect"; //Si l'identifiant ou le mdp sont incorrects
     $req->closeCursor();
 }
+*/
 
 ?>
 <form method="post">
