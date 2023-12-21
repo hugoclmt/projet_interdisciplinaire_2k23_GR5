@@ -10,12 +10,12 @@ class ConnexionDB extends ParentAbstraite
 
     public function connexion($user,$mdp)
     {
-        $query = "SELECT admin FROM employes WHERE identifiant = :user AND mdp = :mdp";
+        $query = "SELECT admin FROM employes WHERE identifiant = :user";
         $sql = $this->db->prepare($query);
         $sql->bindValue(':user',$user);
-        $sql->bindValue(':mdp',$mdp);
         $sql->execute();
         $result = $sql->fetch(PDO::FETCH_ASSOC);
+        echo 'eqsdqds '.$result['admin'];
         if ($result['admin'] == 1)
         {
             return true;
@@ -29,10 +29,6 @@ class ConnexionDB extends ParentAbstraite
         }
 
     }
-<<<<<<< HEAD
-
-
-=======
     private function verifier_admin($identifiant,$mdp)
     {
         $query = "SELECT admin FROM employes WHERE identifiant=:identifiant";
@@ -48,7 +44,6 @@ class ConnexionDB extends ParentAbstraite
             return false;
         }
     }
->>>>>>> ecd35c251e7541b9ce9f722ac6df9f53916132cd
 
     private function hash($mdp)
     {

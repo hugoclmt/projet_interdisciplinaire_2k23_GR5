@@ -33,7 +33,6 @@ $message ="";
 ?>
 <table>
     <?php
-    var_dump($_SESSION);
     for ($i = 0;$i<$nbre_horaire;$i++)
     {
     ?>
@@ -41,7 +40,18 @@ $message ="";
             <td><?php echo $horaire[$i]['date'] ?></td>
             <td><?php echo $horaire[$i]['debut'] ?> jusque <?php echo $horaire[$i]['fin']?></td>
             <td><?php echo $horaire[$i]['nbre_heure']?></td>
-            <td>si dmd accepte</td>
+            <?php 
+                        if ($controlleur_employe->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "Accepté")
+                        {
+                            echo '<td>Congé accepté</td>';
+                        }
+                        else if ($controlleur_employe->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "Refusé"){
+                            echo '<td>Congé refusé</td>';
+                        }
+                        else if($controlleur_employe->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "En attente"){
+                            echo '<td>En attente</td>';
+                        }
+                    ?>
         </tr>
         <?php
     }

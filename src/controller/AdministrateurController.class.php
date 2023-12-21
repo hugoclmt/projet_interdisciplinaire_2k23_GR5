@@ -20,6 +20,16 @@ class AdministrateurController
             return null;
         }
     }
+    public function recuperer_identifiant($id)
+    {
+        $nom = $this->admin->recuperer_identifiant($id);
+        if ($nom!=null)
+        {
+            return $nom;
+        }else{
+            return null;
+        }
+    }
 
     public function accepter_conge($id_employe,$date)
     {

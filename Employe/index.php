@@ -4,7 +4,6 @@ require_once '../src/controller/AdministrateurController.class.php';
 require_once '../src/controller/EmployeController.class.php';
 $controllerAdmin = new AdministrateurController();
 $controllerEmploye = new EmployeController();
-<<<<<<< HEAD
 if (!isset($_SESSION['user_logged_employe']))
 {
     $_SESSION['page'] = "login.php";
@@ -20,16 +19,6 @@ if (empty($_SESSION['page']))
 {
     $_SESSION['page'] = "horaire.php";
 }
-=======
-if(isset($_SESSION['user_logged_employe']))
-{
-    $_SESSION['page'] = "horaire.php";
-}
-if (empty($_SESSION['page']))
-{
-    $_SESSION['page'] = 'gestion.php';
-}
->>>>>>> ecd35c251e7541b9ce9f722ac6df9f53916132cd
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -48,7 +37,6 @@ if (empty($_SESSION['page']))
 </header>
 <body>
     <?php
-    var_dump($_SESSION);
     if(!isset($_SESSION['page'])){ //si la variable sess de page n'a pas été définie
         $_SESSION['page'] = "horaire.php";
     }

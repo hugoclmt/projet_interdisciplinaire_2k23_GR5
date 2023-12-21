@@ -232,6 +232,19 @@ class AdministrateurModel extends EmployeModel
             return null;
         }
     }
+    public function recuperer_identifiant($id){
+        $query = "SELECT identifiant FROM employes WHERE id_employe=:id";
+        $resultset = $this->db->prepare($query);
+        $resultset->bindValue(':id',$id);
+        $resultset->execute();
+        $result = $resultset->fetchall(PDO::FETCH_ASSOC);
+        if (!empty($result)){
+            return $result;
+        }
+        else{
+            return null;
+        }
+    }
 
 
 }

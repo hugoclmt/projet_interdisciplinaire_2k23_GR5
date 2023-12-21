@@ -133,8 +133,9 @@ if (isset($_POST['submitt'])) {
                     <tr>
                         <td>
                         <?php
-                        $nom = $controlleur_admin->recuperer_nom($id_employe);
-                        echo $nom[0]['nom'];
+                            $nom = $controlleur_admin->recuperer_identifiant($id_employe);
+                            $nom = explode(".", $nom[0]['identifiant']);
+                            echo ucfirst($nom[0]) . " " . ucfirst($nom[1]);
                         ?>
                         </td>
                         <td>
