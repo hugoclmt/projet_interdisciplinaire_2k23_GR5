@@ -46,38 +46,36 @@ class UserController
     public function connexionDB($user,$mdp){
         $userNettoye = htmlspecialchars($user);
         $mdpNettoye = htmlspecialchars($mdp);
-        if(!empty($userNettoye) && !empty($mdpNettoye))
-        {
-
-            $result = $this->baseDonnee->connexion($userNettoye,$mdpNettoye);
-            $_SESSION['result'] = $result;
-            if ($result === true)
-            {
-                $_SESSION['username'] = $userNettoye;
-                $_SESSION['user_logged_admin'] = true;
-                $_SESSION['page'] = 'gestion.php';
-                header("Location: ./Administrateur/index.php");
-                exit();
-            }
-            elseif ($result === false){
-                $_SESSION['username'] = $userNettoye;
-                $_SESSION['user_logged_employe'] = true;
-                $_SESSION['page'] = 'horaire.php';
-                header('Location: ./Employe/index.php');
-                exit();
-                //TODO Utilisateur connecte en tant qu'employe
+        if(!empty($userNettoye) && !empty($mdpNettoye)){
+            if ($this->baseDonnee->connexion($userNettoye,$mdpNettoye)){
+                if ($this->baseDonnee->verifier_admin($userNettoye))
+                {
+                    $_SESSION['username'] = $userNettoye;
+                    $_SESSION['user_logged_admin'] = true;
+                    $_SESSION['page'] = 'gestion.php';
+                    header("Location: ./Administrateur/index.php");
+                    exit();
+                }
+                elseif ($result == false){
+                    $_SESSION['username'] = $userNettoye;
+                    $_SESSION['user_logged_employe'] = true;
+                    $_SESSION['page'] = 'horaire.php';
+                    header('Location: ./Employe/index.php');
+                    exit();
+                    //TODO Utilisateur connecte en tant qu'employe
+                }
             }
             else{
-                header("Location: ../index.php?page=login.php");
+                header("Location: ./index.php?page=login.php");
                 exit();
                 //TODO Utilisateur inconnu a l'AD
             }
-
             $_SESSION['username'] = $usernettoye;
             $_SESSION['user_logged_admin'] = true;
             $_SESSION['page'] = 'gestion.php';
             header("Location: ./Administrateur/index.php");
             exit();
+    
         }
         elseif ($result === false){
             $_SESSION['username'] = $usernettoye;

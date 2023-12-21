@@ -10,26 +10,22 @@ class ConnexionDB extends ParentAbstraite
 
     public function connexion($user,$mdp)
     {
-        $query = "SELECT admin FROM employes WHERE identifiant = :user";
+        $query = "SELECT mdp FROM employes WHERE identifiant=:identifiant";
         $sql = $this->db->prepare($query);
-        $sql->bindValue(':user',$user);
+        $sql->bindValue(':identifiant',$user);
         $sql->execute();
-        $result = $sql->fetch(PDO::FETCH_ASSOC);
-        echo 'eqsdqds '.$result['admin'];
-        if ($result['admin'] == 1)
-        {
-            return true;
+        $sql->setFetchMode(PDO::FETCH_OBJ);
+        while ($result=$sql->fetch() ) {
+            if($result->mdp==hash('sha256',$mdp)){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
-        elseif ($result['admin'] == 0)
-        {
-            return false;
-        }
-        else{
-            return null;
-        }
-
+        return null;
     }
-    private function verifier_admin($identifiant,$mdp)
+    public function verifier_admin($identifiant)
     {
         $query = "SELECT admin FROM employes WHERE identifiant=:identifiant";
         $resultset = $this->db->prepare($query);
