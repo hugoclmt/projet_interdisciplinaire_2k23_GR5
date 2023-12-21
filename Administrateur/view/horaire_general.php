@@ -72,7 +72,7 @@ if (isset($_POST['submit_semaine']))
                         else if ($controlleur_employe->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "Refusé"){
                             echo '<td>Congé refusé</td>';
                         }
-                        else{
+                        else if($controlleur_employe->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "En attente"){
                             echo '<td>En attente</td>';
                         }
                     ?>
