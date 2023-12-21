@@ -4,16 +4,29 @@ require_once '../src/controller/AdministrateurController.class.php';
 require_once '../src/controller/EmployeController.class.php';
 $controllerAdmin = new AdministrateurController();
 $controllerEmploye = new EmployeController();
+if(isset($_SESSION['user_logged_employe']))
+{
+    $_SESSION['page'] = "horaire.php";
+}
+if (empty($_SESSION['page']))
+{
+    $_SESSION['page'] = 'gestion.php';
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <title>Centerpark</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link href="lib/css/style1.css?v=vvvvv" rel="stylesheet">
+    <link href="../lib/css/style1.css?v=vvvvv" rel="stylesheet">
 </head>
 <header>
-
+    <?php
+        if (file_exists('../lib/php/header/menu_nav.php'))
+        {
+            include "../lib/php/header/menu_nav.php";
+        }
+    ?>
 </header>
 <body>
     <?php
@@ -32,5 +45,12 @@ $controllerEmploye = new EmployeController();
     }
     ?>
 </body>
+<footer>
+    <?php
+    if (file_exists('../lib/php/footer/footer.php')){//si footer existe on l'inclut
+        include ('../lib/php/footer/footer.php');
+    }
+    ?>
+</footer>
 </html>
 
