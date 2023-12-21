@@ -48,7 +48,7 @@ class UserController
         $mdpNettoye = htmlspecialchars($mdp);
         if(!empty($userNettoye) && !empty($mdpNettoye))
         {
-<<<<<<< HEAD
+
             $result = $this->baseDonnee->connexion($userNettoye,$mdpNettoye);
             $_SESSION['result'] = $result;
             if ($result === true)
@@ -72,7 +72,7 @@ class UserController
                 exit();
                 //TODO Utilisateur inconnu a l'AD
             }
-=======
+
             $_SESSION['username'] = $usernettoye;
             $_SESSION['user_logged_admin'] = true;
             $_SESSION['page'] = 'gestion.php';
@@ -88,7 +88,6 @@ class UserController
         }else{
             header("Location: ../index.php?page=login.php");
             exit();
->>>>>>> ecd35c251e7541b9ce9f722ac6df9f53916132cd
         }
     }
 

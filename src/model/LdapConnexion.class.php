@@ -37,7 +37,7 @@ class LdapConnexion {
         if (!empty($name) && !empty($mdp) && $this->isValidInput($name, $mdp)) { //si les valeurs ne sont pas vide et on appelle la methode isvalidinput
             $ldap_dn = "uid=" . $name . ",dc=groupe5,dc=lan";
             if (@ldap_bind($this->ldap_conn, $ldap_dn, $mdp)) { //on verif si l'user existe
-                return $this->verifierAppartenanceGroupe($name, "cn=Administrateurs,ou=groupes,dc=SERVEUR_GR5,dc=lan", "dc=SERVEUR_GR5,dc=lan"); //si l'user existe on appelle la methode appartenancegroupe pour verif si l'user appaartient a admin oj pas
+                return $this->verifierAppartenanceGroupe($name, "cn=Administrateur,ou=groupe5,dc=groupe5,dc=lan", "dc=groupe5,dc=lan"); //si l'user existe on appelle la methode appartenancegroupe pour verif si l'user appaartient a admin oj pas
             }
         }
         return null;
