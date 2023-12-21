@@ -49,14 +49,17 @@ if (isset($_POST['submit_horaire']))
     $fin = $_POST['fin'];
     $message = $controlleur_admin->creer_horaire($id_employe,$date,$debut,$fin);
 }
-
+$heure_tb = $controlleur_admin->recuperer_all_heure($id);
+$heure = $heure_tb[0]['SUM(nbre_heure)'];
 ?>
 
 
 <h2>Votre horaire</h2>
 
+
 <h3>Semaine 51</h3>
-<table>
+<p>Heure présté cette semaine : <?php echo $heure;?>  </p>
+    <table>
     <?php
     for ($i = 0;$i<$nbre_horaire;$i++)
     {
@@ -71,7 +74,7 @@ if (isset($_POST['submit_horaire']))
     }
         ?>
 
-</table>
+    </table>
 
 <form method="post">
     <fieldset>

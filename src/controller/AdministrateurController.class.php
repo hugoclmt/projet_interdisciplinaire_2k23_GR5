@@ -91,4 +91,16 @@ class AdministrateurController
         }
     }
 
+    public function recuperer_all_heure($id)
+    {
+        $nbre = $this->admin->recuperer_nbre_heure($id);
+        if (!empty($nbre))
+        {
+            return $nbre;
+        }
+        else{
+            return null;
+        }
+    }
+
 }

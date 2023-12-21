@@ -158,7 +158,7 @@ class AdministrateurModel extends EmployeModel
         }
     }
 
-    private function recuperer_nbre_heure($id_employe) //erreur a fixer
+    public function recuperer_nbre_heure($id_employe) //erreur a fixer
     {
         //calculer le nombre d'heure de l'employe
         $query = "SELECT SUM(nbre_heure) FROM jour_horaire WHERE id_employe=:id_employe";
