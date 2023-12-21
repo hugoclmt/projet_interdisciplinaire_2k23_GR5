@@ -1,13 +1,12 @@
 <?php
 
-class EmployeModel 
+class EmployeModel extends ParentAbstraite
 {
-    private $db;
+    protected $db;
 
     public function __construct()
     {
-        $database = new DbModel();
-        $this->db = $database->get_pdo();
+        parent::__construct();
     }
 
     public function demander_conge($date_conge,$justificatif,$id_employe) //fct pour employe qui demande conge. date debut conge et date fin conge

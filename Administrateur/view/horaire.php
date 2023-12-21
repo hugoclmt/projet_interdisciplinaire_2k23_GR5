@@ -64,6 +64,8 @@ if (isset($_POST['submit_semaine']))
     $date_fin->setISODate($annee,$week,7); 
 }
 
+$heure_total = $controlleur_employee->recuperer_heure_total($id);
+
 ?>
 <div>
 <h2>Votre horaire cette semaine</h2>
@@ -81,6 +83,9 @@ if (isset($_POST['submit_semaine']))
     <input type="submit" name="submit_semaine" value="Voir cette semaine">
 </form>
 </div>
+        <div>
+            <p><?php echo $heure_total?></p>
+        </div>
 <table>
     <?php
     for ($i = 0;$i<$nbre_horaire;$i++)

@@ -37,6 +37,8 @@ if (is_array($horaire) || $horaire instanceof Countable)
 }
 $vu = false;
 $message ="";
+
+$heure_total = $controlleur_employe->recuperer_all_heures($id);
 ?>
 <div>
 <h2>Votre horaire cette semaine</h2>
@@ -54,6 +56,9 @@ $message ="";
     <input type="submit" name="submit_semaine" value="Voir cette semaine">
 </form>
 </div>
+        <div>
+            <p><?php echo $heure_total?></p>
+        </div>
 <table>
     <?php
     for ($i = 0;$i<$nbre_horaire;$i++)
