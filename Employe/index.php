@@ -22,9 +22,9 @@ if (empty($_SESSION['page']))
 </head>
 <header>
     <?php
-        if (file_exists('../lib/php/header/menu_nav.php'))
+        if (file_exists('./lib/php/menu_nav.php'))
         {
-            include "../lib/php/header/menu_nav.php";
+            include "./lib/php/menu_nav.php";
         }
     ?>
 </header>
