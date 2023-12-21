@@ -38,11 +38,15 @@ if (is_array($horaire) || $horaire instanceof Countable)
 $vu = false;
 $message ="";
 ?>
-<h2>Votre horaire cette semaine</h2>
 <div>
-<?php
-    echo '<h3>Semaine '.$week.', '.$annee.'</h3>';
-?>
+<h2>Votre horaire cette semaine</h2>
+    <fieldset>
+        <legend>
+        <?php
+            echo '<h3>Semaine '.$week.', '.$annee.'</h3>';
+        ?>
+        </legend>
+
 <div class="h_general">
 <form method="post">
     <label for="semaine">Choisir une semaine</label>
@@ -80,6 +84,7 @@ $message ="";
         ?>
 
 </table>
+</fieldset>
 </div>
 <div>
 <form method="post">

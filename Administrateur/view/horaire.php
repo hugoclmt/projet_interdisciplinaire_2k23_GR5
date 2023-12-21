@@ -65,17 +65,22 @@ if (isset($_POST['submit_semaine']))
 }
 
 ?>
-<h2>Votre horaire cette semaine</h2>
 <div>
-<?php
-    echo '<h3>Semaine '.$week.'</h3>';
-?>
+<h2>Votre horaire cette semaine</h2>
+    <fieldset>
+        <legend>
+        <?php
+            echo '<h3>Semaine '.$week.', '.$annee.'</h3>';
+        ?>
+        </legend>
+
 <div class="h_general">
 <form method="post">
     <label for="semaine">Choisir une semaine</label>
     <input type="week" name="semaine" required>
     <input type="submit" name="submit_semaine" value="Voir cette semaine">
 </form>
+</div>
 <table>
     <?php
     for ($i = 0;$i<$nbre_horaire;$i++)
@@ -103,6 +108,7 @@ if (isset($_POST['submit_semaine']))
         ?>
 
 </table>
+</fieldset>
 </div>
 <div>
 <form method="post">

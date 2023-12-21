@@ -30,7 +30,7 @@ if (isset($_POST['submit_semaine']))
 }
 ?>
 
-<h2>Horaire Generale</h2>
+<h2>Horaire Général</h2>
 <div class="h_general">
 <form method="post">
     <label for="semaine">Choisir une semaine</label>
@@ -39,9 +39,12 @@ if (isset($_POST['submit_semaine']))
 </form>
 </div>
 <div class="h_general">
-    <?php
-        echo '<h3>Semaine '.$week.', '.$annee.'</h3>';
-    ?>
+    <fieldset>
+        <legend> 
+        <?php
+            echo '<h3>Semaine '.$week.', '.$annee.'</h3>';
+        ?>
+        </legend>
     <table>
         <tr>
             <th>Id employe</th>
@@ -79,4 +82,5 @@ if (isset($_POST['submit_semaine']))
         }
         ?>
     </table>
+    </fieldset>
 </div>
