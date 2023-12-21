@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 21, 2023 at 03:18 PM
+-- Generation Time: Dec 21, 2023 at 04:08 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.1.10
 
@@ -55,7 +55,7 @@ CREATE TABLE `employes` (
 --
 
 INSERT INTO `employes` (`id_employe`, `id_type`, `identifiant`, `mdp`, `admin`, `nbre_conges`) VALUES
-(1, 1, 'floriant.alaert', 'a544f49a44e1b75ef70d54123611651dae4cc59d2575a53670c1a6d691ef5dc1', 0, 0),
+(1, 1, 'florian.alaert', 'a544f49a44e1b75ef70d54123611651dae4cc59d2575a53670c1a6d691ef5dc1', 0, 0),
 (2, 1, 'valentin.barbencon', 'a544f49a44e1b75ef70d54123611651dae4cc59d2575a53670c1a6d691ef5dc1', 0, 0),
 (3, 2, 'arnaud.boucaut', 'a544f49a44e1b75ef70d54123611651dae4cc59d2575a53670c1a6d691ef5dc1', 0, 0),
 (4, 2, 'sebastien.buze', 'a544f49a44e1b75ef70d54123611651dae4cc59d2575a53670c1a6d691ef5dc1', 0, 0),
