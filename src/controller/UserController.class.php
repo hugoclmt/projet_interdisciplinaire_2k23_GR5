@@ -57,7 +57,7 @@ class UserController
         elseif ($result === false){
             $_SESSION['user_logged_employe'] = true;
             $_SESSION['page'] = 'horaire.php';
-            header('Location: /Employe/index.php');
+            header('Location: ./Employe/index.php');
             exit();
         }else{
             header("Location: ../index.php?page=login.php");
