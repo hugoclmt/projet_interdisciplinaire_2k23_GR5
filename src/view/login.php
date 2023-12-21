@@ -16,7 +16,7 @@ if (isset($_POST['connexion']))
     }
 }
 ?>
-<form method="post">
+<form method="post" id='form_connect'>
     <input type="text" name="username" placeholder="Identifiant" required>
     <input type="password" name="password" placeholder="Mot de passe" required>
     <input type="hidden" name="crsf" value="<?php echo $crsf_token;?>">

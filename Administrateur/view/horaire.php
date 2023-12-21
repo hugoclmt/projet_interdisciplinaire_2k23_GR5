@@ -7,6 +7,7 @@ if (isset($_SESSION['username'])) {
     header("Location: ../index.php");
     exit();
 }
+$week = date("W");
 
 if (isset($_POST['submitconge']))
 {
@@ -49,17 +50,14 @@ if (isset($_POST['submit_horaire']))
     $fin = $_POST['fin'];
     $message = $controlleur_admin->creer_horaire($id_employe,$date,$debut,$fin);
 }
-$heure_tb = $controlleur_admin->recuperer_all_heure($id);
-$heure = $heure_tb[0]['SUM(nbre_heure)'];
+
 ?>
-
-
-<h2>Votre horaire</h2>
-
-
-<h3>Semaine 51</h3>
-<p>Heure présté cette semaine : <?php echo $heure;?>  </p>
-    <table>
+<h2>Votre horaire cette semaine</h2>
+<div>
+<?php
+    echo '<h3>Semaine '.$week.'</h3>';
+?>
+<table>
     <?php
     for ($i = 0;$i<$nbre_horaire;$i++)
     {
@@ -68,14 +66,26 @@ $heure = $heure_tb[0]['SUM(nbre_heure)'];
             <td><?php echo $horaire[$i]['date'] ?></td>
             <td><?php echo $horaire[$i]['debut'] ?> jusque <?php echo $horaire[$i]['fin']?></td>
             <td><?php echo $horaire[$i]['nbre_heure']?></td>
-            <td>si dmd accepte</td>
+            <?php 
+                        if ($controlleur_employe->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "Accepté")
+                        {
+                            echo '<td>Congé accepté</td>';
+                        }
+                        else if ($controlleur_employe->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "Refusé"){
+                            echo '<td>Congé refusé</td>';
+                        }
+                        else if($controlleur_employe->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "En attente"){
+                            echo '<td>En attente</td>';
+                        }
+                    ?>
         </tr>
         <?php
     }
         ?>
 
-    </table>
-
+</table>
+</div>
+<div>
 <form method="post">
     <fieldset>
         <legend>Demander un congé</legend>
@@ -94,8 +104,11 @@ if (isset($message))
     echo $message;
 }
 ?>
+</div>
+
 <?php if(!$vu)
 { ?>
+    <div>
     <form method="post">
         <fieldset>
             <legend>Creation horaire</legend>
@@ -114,9 +127,11 @@ if (isset($message))
             <input type="submit" name="submittype">
         </fieldset>
     </form>
+    </div>
 <?php
 }else{
-?>
+?>  
+    <div>
     <form method="post">
         <fieldset>
             <label for="employe">Employe :</label>
@@ -139,6 +154,7 @@ if (isset($message))
             <input type="submit" name="submit_horaire">
         </fieldset>
     </form>
+    </div>
 <?php
     echo $message;
 }?>

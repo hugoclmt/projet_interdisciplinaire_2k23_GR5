@@ -29,8 +29,26 @@ class ConnexionDB extends ParentAbstraite
         }
 
     }
+<<<<<<< HEAD
 
 
+=======
+    private function verifier_admin($identifiant,$mdp)
+    {
+        $query = "SELECT admin FROM employes WHERE identifiant=:identifiant";
+        $resultset = $this->db->prepare($query);
+        $resultset->bindValue(':identifiant',$identifiant);
+        $resultset->execute();
+        $result = $resultset->fetch();
+        if ($result['admin'] == 1)
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+>>>>>>> ecd35c251e7541b9ce9f722ac6df9f53916132cd
 
     private function hash($mdp)
     {
