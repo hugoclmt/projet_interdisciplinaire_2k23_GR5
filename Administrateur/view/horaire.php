@@ -1,10 +1,10 @@
 <?php
-if (isset($_SESSION['username'])) {
-    $name = htmlspecialchars($_SESSION['username']);
-    $id = $controlleur_employe->get_id($name);
+if (isset($_SESSION['username'])) { //si l'utilisateur est connecte
+    $name = htmlspecialchars($_SESSION['username']); //on recupere son nom
+    $id = $controlleur_employe->get_id($name); //on recupere son id
 }else{
-    $_SESSION['page'] = "login.php";
-    header("Location: ../index.php");
+    $_SESSION['page'] = "login.php"; //sinon on le redirige vers la page de connexion
+    header("Location: ../index.php"); //on redirige vers la page d'accueil
     exit();
 }
 //Variables par défaut pour la date et la semaine
@@ -14,14 +14,14 @@ $date_fin = new DateTime();
 $date_fin->add(new DateInterval('P7D'));
 $week = $date_debut->format("W");
 $annee = $date_debut->format("Y");
-if (isset($_POST['submitconge']))
+if (isset($_POST['submitconge'])) //si on appuie sur le bouton pour dmd ses conge
 {
-    $str = $_POST['date'];
+    $str = $_POST['date']; //on recupere la date
     $date = new DateTime($str);
     $justification = $_POST['demande'];
-    $message = $controlleur_employe->demander_conge($date,$justification,$id);
+    $message = $controlleur_employe->demander_conge($date,$justification,$id); //on appelle la methode demander_conge du controller
 }
-$horaire = $controlleur_employe->recuperer_horaire($id);
+$horaire = $controlleur_employe->recuperer_horaire($id); //on recupere l'horaire de l'employe
 $nbre_horaire =0;
 if (is_array($horaire) || $horaire instanceof Countable)
 {
@@ -30,32 +30,32 @@ if (is_array($horaire) || $horaire instanceof Countable)
     $msg = "Erreur";
 }
 
-$types = $controlleur_admin->recuper_type();
+$types = $controlleur_admin->recuper_type(); //on recupere les types
 $nbre_type = 0;
 if (is_array($types) || $types instanceof Countable) {
     $nbre_type = count($types);
 }
 $vu = false;
 $message ="";
-if (isset($_POST['submittype']))
+if (isset($_POST['submittype'])) //si on appuie sur le bouton pour voir les employes d'un type
 {
-    $vu = true;
-    $id_type = $_POST['type'];
-    $users = $controlleur_admin->recuper_personnes_partype($id_type);
+    $vu = true; //on affiche les employes
+    $id_type = $_POST['type']; //on recupere l'id du type
+    $users = $controlleur_admin->recuper_personnes_partype($id_type); //on recupere les employes du type
     $nbre_users = 0;
-    if(!empty($users)){
+    if(!empty($users)){ //si il y a des employes
         $nbre_users = count($users);
     }
 }
-if (isset($_POST['submit_horaire']))
+if (isset($_POST['submit_horaire'])) //si on appuie sur le bouton pour creer un horaire
 {
-    $id_employe = $_POST['employe'];
-    $date = $_POST['date'];
-    $debut = $_POST['debut'];
-    $fin = $_POST['fin'];
-    $message = $controlleur_admin->creer_horaire($id_employe,$date,$debut,$fin);
+    $id_employe = $_POST['employe']; //on recupere l'id de l'employe
+    $date = $_POST['date']; //on recupere la date
+    $debut = $_POST['debut']; //on recupere l'heure de debut
+    $fin = $_POST['fin']; //on recupere l'heure de fin
+    $message = $controlleur_admin->creer_horaire($id_employe,$date,$debut,$fin); //on appelle la methode creer_horaire du controller
 }
-if (isset($_POST['submit_semaine']))
+if (isset($_POST['submit_semaine'])) //si on appuie sur le bouton pour voir une semaine
 {
     $annee_semaine = explode("-W",$_POST['semaine']); //on recupere l'annee et la semaine
     $week = $annee_semaine[1];
@@ -64,7 +64,7 @@ if (isset($_POST['submit_semaine']))
     $date_fin->setISODate($annee,$week,7); 
 }
 
-$heure_total = $controlleur_employee->recuperer_heure_total($id);
+$heure_total = $controlleur_employee->recuperer_heure_total($id); //on recupere le nombre d'heure total de l'employe
 
 ?>
 <div>

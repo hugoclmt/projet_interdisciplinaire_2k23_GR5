@@ -1,5 +1,5 @@
 <?php
-$horaire = $controlleur_admin->recuperer_all_horaire();
+$horaire = $controlleur_admin->recuperer_all_horaire(); //on recupere tous les horaires
 //Variables par défaut pour la date et la semaine
 $date_debut = new DateTime();
 $date_debut->modify('monday this week');
@@ -8,7 +8,7 @@ $date_fin->add(new DateInterval('P7D'));
 $week = $date_debut->format("W");
 $annee = $date_debut->format("Y");
 
-$nbre_tout_horaire =0;
+$nbre_tout_horaire =0; //on initialise le nombre d'horaire
 
 $demande_conge = $controlleur_admin->recuperer_demande_conge(); //on recuperer toutes lse demandes de congé et maladie
 if (is_array($demande_conge) || $demande_conge instanceof Countable) { //on verifie si on peut compter
@@ -20,7 +20,7 @@ $nbre_tout_horaire = count($horaire);
 }else{
 $msg = "Erreur";
 }
-if (isset($_POST['submit_semaine']))
+if (isset($_POST['submit_semaine'])) //si on appuie sur le bouton pour voir une semaine
 {
     $annee_semaine = explode("-W",$_POST['semaine']); //on recupere l'annee et la semaine
     $week = $annee_semaine[1];

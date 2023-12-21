@@ -57,7 +57,7 @@ class EmployeModel extends ParentAbstraite
         }
     }
 
-    protected function recuperer_nbre_conge($id_employe)
+    protected function recuperer_nbre_conge($id_employe) //methode pour recuperer le nombre de conge
     {
         $query="SELECT nbre_conges FROM employes WHERE id_employe=:id_employe";
         $resultset = $this->db->prepare($query);
@@ -73,7 +73,7 @@ class EmployeModel extends ParentAbstraite
         }
     }
 
-    public function get_id($username)
+    public function get_id($username) //methode pour recuperer l'id de l'employe avec son username
     {
         $query = "SELECT id_employe FROM employes WHERE identifiant=:username";
         $resultset = $this->db->prepare($query);
@@ -89,7 +89,7 @@ class EmployeModel extends ParentAbstraite
         }
     }
 
-    public function get_all_hours($id_employe)
+    public function get_all_hours($id_employe) //methode pour recuperer le nombre d'heure total de l'employe
     {
         $query = "SELECT SUM(nbre_heure) FROM jour_horaire WHERE id_employe=:id_employe";
         $resultset = $this->db->prepare($query);

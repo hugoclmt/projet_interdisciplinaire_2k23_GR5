@@ -11,36 +11,36 @@ class EmployeController
         $this->modelemploye = new EmployeModel();
     }
 
-    public function demander_conge($date,$justificatif,$id_employe){
-        $justificatifNettoye = htmlspecialchars($justificatif);
+    public function demander_conge($date,$justificatif,$id_employe){ //methode pour demander un conge
+        $justificatifNettoye = htmlspecialchars($justificatif); //nettoyage des données
         if (!empty($id_employe) && !empty($date) && !empty($justificatifNettoye))
         {
-            $result = $this->modelemploye->demander_conge($date,$justificatifNettoye,$id_employe);
+            $result = $this->modelemploye->demander_conge($date,$justificatifNettoye,$id_employe); //appel de la methode demander_conge du modeleemploye
             if ($result)
             {
-                return "OK";
+                return "Demande de congé envoyée";
             }
             else{
-                return "NONOK";
+                return "Erreur lors de l'envoi de la demande";
             }
         }
     }
-    public function voir_confirm_conge($id_employe,$date){
-        $id = htmlspecialchars($id_employe);
-        $dateNettoye = htmlspecialchars($date);
-        $result = $this->modelemploye->voir_confirm_conge($id,$dateNettoye);
-        if ($result!=null)
+    public function voir_confirm_conge($id_employe,$date){ //methode pour voir si le conge a été accepté ou refusé
+        $id = htmlspecialchars($id_employe); //nettoyage des données
+        $dateNettoye = htmlspecialchars($date); //nettoyage des données
+        $result = $this->modelemploye->voir_confirm_conge($id,$dateNettoye); //appel de la methode voir_confirm_conge du modeleemploye
+        if ($result!=null) //si le resultat n'est pas null
         {
-            return $result;
+            return $result; //on retourne le resultat
         }
         else{
-            return null;
+            return null; //sinon on retourne null
         }
     }
 
-    public function recuperer_horaire($id)
+    public function recuperer_horaire($id) //methode pour recuperer les horaires
     {
-        $horaire = $this->modelemploye->recuperer_horaire($id);
+        $horaire = $this->modelemploye->recuperer_horaire($id); //appel de la methode recuperer_horaire du modeleemploye
         if ($horaire!=null){
             return $horaire;
         }
@@ -49,10 +49,10 @@ class EmployeController
         }
     }
 
-    public function get_id($username)
+    public function get_id($username) //methode pour recuperer l'id de l'employe avec son username
     {
-        $name = htmlspecialchars($username);
-        $result = $this->modelemploye->get_id($name);
+        $name = htmlspecialchars($username); //nettoyage des données
+        $result = $this->modelemploye->get_id($name); //appel de la methode get_id du modeleemploye
         if ($result == null)
         {
             return "Aucun utilisateur trouvé";
@@ -62,9 +62,9 @@ class EmployeController
         }
     }
 
-    public function recuperer_all_heures($id)
+    public function recuperer_all_heures($id) //methode pour recuperer toutes les heures de l'employe
     {
-        $heures = $this->modelemploye->get_all_hours($id);
+        $heures = $this->modelemploye->get_all_hours($id); //appel de la methode get_all_hours du modeleemploye
         if ($heures!=null){
             return $heures;
         }

@@ -2,22 +2,22 @@
 session_start();
 require_once '../src/controller/AdministrateurController.class.php';
 require_once '../src/controller/EmployeController.class.php';
-$controllerAdmin = new AdministrateurController();
-$controllerEmploye = new EmployeController();
-if (!isset($_SESSION['user_logged_employe']))
+$controllerAdmin = new AdministrateurController(); //on instancie l'objet controllerAdmin
+$controllerEmploye = new EmployeController(); //on instancie l'objet controllerEmploye
+if (!isset($_SESSION['user_logged_employe'])) //si l'employe n'est pas connecte
 {
-    $_SESSION['page'] = "login.php";
+    $_SESSION['page'] = "login.php"; //on le redirige vers la page de connexion
     header("Location: ../index.php");
     exit();
 }
-if(isset($_SESSION['user_logged_admin']))
+if(isset($_SESSION['user_logged_admin'])) //si l'admin est connecte
 {
-    $_SESSION['page'] = "gestion.php";
+    $_SESSION['page'] = "gestion.php"; //on le redirige vers la page de gestion
     header('Location: ../Administrateur/index.php');
 }
-if (empty($_SESSION['page']))
+if (empty($_SESSION['page'])) //si la variable sess de page est vide
 {
-    $_SESSION['page'] = "horaire.php";
+    $_SESSION['page'] = "horaire.php"; //on la redirige vers la page d'horaire
 }
 ?>
 <!DOCTYPE html>

@@ -1,21 +1,21 @@
 <?php
-session_start();
+session_start(); //demarrer une session
 require './src/controller/UserController.class.php';
-$controller = new UserController();
-if (isset($_SESSION['user_logged_admin']))
+$controller = new UserController(); //appel du controller
+if (isset($_SESSION['user_logged_admin'])) //si l'utilisateur est connecte en tant qu'admin
 {
-    header('Location: ./Administrateur/index.php');
+    header('Location: ./Administrateur/index.php'); //on le redirige vers la page admin
 
-}elseif (isset($_SESSION['user_logged_employe']))
+}elseif (isset($_SESSION['user_logged_employe'])) //si l'utilisateur est connecte en tant qu'employe
 {
-    header("Location: ./Employe/index.php");
+    header("Location: ./Employe/index.php"); //on le redirige vers la page employe
 }
 
-if(empty($_SESSION['crsf_token']))
+if(empty($_SESSION['crsf_token'])) //si la session crsf_token est vide
 {
-    $_SESSION['crsf_token'] = bin2hex(random_bytes(32));
+    $_SESSION['crsf_token'] = bin2hex(random_bytes(32)); //on cree un token aleatoire
 }
-$crsf_token = $_SESSION['crsf_token'];
+$crsf_token = $_SESSION['crsf_token']; //on stock le token dans une variable
 
 ?>
 <!DOCTYPE html>

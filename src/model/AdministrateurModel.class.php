@@ -44,7 +44,7 @@ class AdministrateurModel extends EmployeModel
         }
     }
 
-    private function ajouter_conge()
+    private function ajouter_conge() //methode pour ajouter un conge
     {
         $query = "UPDATE employes SET nbre_conges = nbre_conges + 1";
         $resultset = $this->db->prepare($query);
@@ -58,18 +58,8 @@ class AdministrateurModel extends EmployeModel
         $this->modifier_statut_conge($id_employe,$statut,$date);
     }
 
-// finis la methode en dessous
-    private function modifier_etat_user($id)
-    {
-        $query = "";
-        $resultset = $this->db->prepare($query);
-        $resultset->bindValue();
-        $resultset->bindValue();
-        $resultset->execute();
 
-    }
-
-    private function modifier_statut_conge($id_employe,$statut,$date){ //fct pour changer le statut d'un employe
+    private function modifier_statut_conge($id_employe,$statut,$date){ //methode pour changer le statut d'un employe
         try{
                 $query = "UPDATE conge SET congeconfirm=:statut WHERE id_employe=:id AND date_conge=:date";
                 $resultset = $this->db->prepare($query);
@@ -83,7 +73,7 @@ class AdministrateurModel extends EmployeModel
     }
 
 
-    public function rappeller_employe($id_employe,$date,$heure_debut,$heure_fin)
+    public function rappeller_employe($id_employe,$date,$heure_debut,$heure_fin) //methode pour rappeller n employe
     {
         $r =$this->verifier_utilisateur_work($id_employe,$date);
         if ($r) {
@@ -103,7 +93,7 @@ class AdministrateurModel extends EmployeModel
 
 
 
-    private function calculerDifferenceHeures($heure1, $heure2) {
+    private function calculerDifferenceHeures($heure1, $heure2) {  //methode pour calculer la difference entre deux heures
         // Convertir les heures en objets DateTime
         $datetime1 = new DateTime($heure1);
         $datetime2 = new DateTime($heure2);
@@ -115,7 +105,7 @@ class AdministrateurModel extends EmployeModel
 
 
 
-    public function remplacer_employe($ancien_id,$nouveau_id)
+    public function remplacer_employe($ancien_id,$nouveau_id) //methode pour remplacer un employe
     {
         $query = "UPDATE jour_horaire SET id_employe=:nv_id WHERE id_employe=:ancien_id";
         $resultset = $this->db->prepare($query);
@@ -124,7 +114,7 @@ class AdministrateurModel extends EmployeModel
         return $resultset->execute();
     }
 
-    public function recuperer_employe_type($id_type)
+    public function recuperer_employe_type($id_type) //methode pour recuperer les employe d'un type
     {
         try{
             $query = "SELECT * FROM employes WHERE id_type=:id_type";
@@ -145,7 +135,7 @@ class AdministrateurModel extends EmployeModel
         }
     }
 
-    public function recuperer_type()
+    public function recuperer_type() //methode pour recuperer les types
     {
         $query = "SELECT * FROM type";
         $resultset = $this->db->prepare($query);
@@ -159,7 +149,7 @@ class AdministrateurModel extends EmployeModel
         }
     }
 
-    public function recuperer_nbre_heure($id_employe) //erreur a fixer
+    public function recuperer_nbre_heure($id_employe) //methode pour recuperer le nombre d'heure d'un employe mais erreur
     {
         //calculer le nombre d'heure de l'employe
         $query = "SELECT SUM(nbre_heure) FROM jour_horaire WHERE id_employe=:id_employe";
@@ -175,7 +165,7 @@ class AdministrateurModel extends EmployeModel
         }
     }
 
-    private function verifier_utilisateur_work($id_employe,$date)
+    private function verifier_utilisateur_work($id_employe,$date) //methode pour verifier si l'employe est deja  entrain travailler
     {
         $query = "SELECT * FROM jour_horaire WHERE id_employe=:id_employe AND date=:date";
         $resultset = $this->db->prepare($query);
@@ -191,7 +181,7 @@ class AdministrateurModel extends EmployeModel
         }
     }
 
-    public function creer_horaire($id_employe,$date,$debut,$fin)
+    public function creer_horaire($id_employe,$date,$debut,$fin) //methode pour creer un horaire
     {
         $h_totale = 38;
         $nbre_heure = floatval($this->calculerDifferenceHeures($debut,$fin)); //calculer la difference entre l'heure de debut et l'heure de fin
@@ -220,7 +210,7 @@ class AdministrateurModel extends EmployeModel
         }
 
     }
-    public function get_all_horaire(){
+    public function get_all_horaire(){ //methode pour recuperer tous les horaires
         $query = "SELECT * FROM jour_horaire";
         $resultset = $this->db->prepare($query);
         $resultset->execute();
@@ -232,7 +222,7 @@ class AdministrateurModel extends EmployeModel
             return null;
         }
     }
-    public function recuperer_identifiant($id){
+    public function recuperer_identifiant($id){ //methode pour recuperer l'identifiant d'un employe
         $query = "SELECT identifiant FROM employes WHERE id_employe=:id";
         $resultset = $this->db->prepare($query);
         $resultset->bindValue(':id',$id);

@@ -1,7 +1,5 @@
 <?php
 require_once '../src/controller/EmployeController.class.php';
-$controlleur_employe = new EmployeController();
-
 
 //Variables par défaut pour la date et la semaine
 $date_debut = new DateTime();
@@ -10,15 +8,15 @@ $date_fin = new DateTime();
 $date_fin->add(new DateInterval('P7D'));
 $week = $date_debut->format("W");
 $annee = $date_debut->format("Y");
-
-if (isset($_POST['submitconge']))
+$id = $controllerEmploye->get_id($_SESSION['username']); //on recupere l'id de l'employe
+if (isset($_POST['submitconge'])) //si on appuie sur le bouton pour dmd ses conge
 {
-    $str = $_POST['date'];
-    $date = new DateTime($str);
-    $justification = $_POST['demande'];
-    $message = $controlleur_employe->demander_conge($date,$justification,$id);
+    $str = $_POST['date']; //on recupere la date
+    $date = new DateTime($str); //on la met dans un objet DateTime
+    $justification = $_POST['demande']; //on recupere la justification
+    $message = $controllerEmploye->demander_conge($date,$justification,$id); //on appelle la methode demander_conge du controller
 }
-if (isset($_POST['submit_semaine']))
+if (isset($_POST['submit_semaine'])) //si on appuie sur le bouton pour voir une semaine
 {
     $annee_semaine = explode("-W",$_POST['semaine']); //on recupere l'annee et la semaine
     $week = $annee_semaine[1];
@@ -26,19 +24,19 @@ if (isset($_POST['submit_semaine']))
     $date_debut->setISODate($annee,$week,1);
     $date_fin->setISODate($annee,$week,7); 
 }
-$id = $controlleur_employe->get_id($_SESSION['username']);
-$horaire = $controlleur_employe->recuperer_horaire($id);
-$nbre_horaire =0;
-if (is_array($horaire) || $horaire instanceof Countable)
+
+$horaire = $controllerEmploye->recuperer_horaire($id); //on recupere l'horaire de l'employe
+$nbre_horaire =0; //on initialise le nombre d'horaire
+if (is_array($horaire) || $horaire instanceof Countable) //si l'horaire est un tableau
 {
-    $nbre_horaire = count($horaire);
+    $nbre_horaire = count($horaire); //on compte le nombre d'horaire
 }else{
     $msg = "Erreur";
 }
 $vu = false;
 $message ="";
 
-$heure_total = $controlleur_employe->recuperer_all_heures($id);
+$heure_total = $controllerEmploye->recuperer_all_heures($id); //on recupere le nombre d'heures total de l'employe
 ?>
 <div>
 <h2>Votre horaire cette semaine</h2>
@@ -71,14 +69,14 @@ $heure_total = $controlleur_employe->recuperer_all_heures($id);
             <td><?php echo $horaire[$i]['debut'] ?> jusque <?php echo $horaire[$i]['fin']?></td>
             <td><?php echo $horaire[$i]['nbre_heure']?></td>
             <?php 
-                        if ($controlleur_employe->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "Accepté")
+                        if ($controllerEmploye->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "Accepté")
                         {
                             echo '<td>Congé accepté</td>';
                         }
-                        else if ($controlleur_employe->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "Refusé"){
+                        else if ($controllerEmploye->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "Refusé"){
                             echo '<td>Congé refusé</td>';
                         }
-                        else if($controlleur_employe->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "En attente"){
+                        else if($controllerEmploye->voir_confirm_conge($horaire[$i]['id_employe'],$horaire[$i]['date']) == "En attente"){
                             echo '<td>En attente</td>';
                         }
                     ?>

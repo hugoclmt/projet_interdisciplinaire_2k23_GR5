@@ -1,24 +1,24 @@
 <?php
-session_start();
+session_start(); //on demarre la session
 require_once '../src/controller/AdministrateurController.class.php';
 require_once '../src/controller/EmployeController.class.php';
-if (!isset($_SESSION['user_logged_admin']))
+if (!isset($_SESSION['user_logged_admin'])) //si l'admin n'est pas connecte
 {
-    $_SESSION['page'] = "login.php";
-    header("Location: ../index.php");
+    $_SESSION['page'] = "login.php"; //on le redirige vers la page de connexion
+    header("Location: ../index.php"); //on redirige vers la page d'accueil
     exit();
 }
-if(isset($_SESSION['user_logged_employe']))
+if(isset($_SESSION['user_logged_employe'])) //si l'employe est connecte
 {
-    $_SESSION['page'] = "horaire.php";
-    header('Location: ../Employe/index.php');
+    $_SESSION['page'] = "horaire.php"; //on le redirige vers la page d'horaire
+    header('Location: ../Employe/index.php'); //on redirige vers la page d'accueil employe
 }
-if (empty($_SESSION['page']))
+if (empty($_SESSION['page'])) //si la variable sess de page est vide
 {
-    $_SESSION['page'] = 'gestion.php';
+    $_SESSION['page'] = 'gestion.php'; //on la redirige vers la page de gestion
 }
-$controlleur_admin = new AdministrateurController();
-$controlleur_employe = new EmployeController();
+$controlleur_admin = new AdministrateurController(); //on instancie l'objet controllerAdmin
+$controlleur_employe = new EmployeController(); //on instancie l'objet controllerEmploye
 ?>
 <!DOCTYPE html>
 <html lang="fr">

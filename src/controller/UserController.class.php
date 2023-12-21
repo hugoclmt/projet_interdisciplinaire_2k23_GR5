@@ -7,21 +7,21 @@ class UserController
     private $baseDonnee;
 
     public function __construct(){
-        $this->activeDirectory = new LdapConnexion("192.168.200.1",389,"dc=groupe5,dc=lan");
-        $this->baseDonnee = new ConnexionDB();
+        $this->activeDirectory = new LdapConnexion("192.168.200.1",389,"dc=groupe5,dc=lan"); //on instancie la classe ldapConnexion
+        $this->baseDonnee = new ConnexionDB(); //on instancie la classe ConnexionDB
     }
 
-    public function connexionAD($name,$mdp)
+    public function connexionAD($name,$mdp) //methode pour la connexion a l'active directory
     {
         $nameNettoye = htmlspecialchars($name); //eviter le XSS
         $mdpNettoye = htmlspecialchars($mdp);
         if(!empty($nameNettoye) && !empty($mdpNettoye)) //si les variables ne sont pas vide
         {
             $result = $this->activeDirectory->authentification($nameNettoye,$mdpNettoye); //on appelle le modele ldapConnexion avec sa methode authentification
-            if ($result)
+            if ($result) //si l'user existe
             {
-                $result_admin = $this->baseDonnee->verifier_admin($nameNettoye);
-                if ($result_admin)
+                $result_admin = $this->baseDonnee->verifier_admin($nameNettoye); //on appelle le modele ConnexionDB avec sa methode verifier_admin
+                if ($result_admin) //si l'user est admin
                 {
                     $_SESSION['username'] = $nameNettoye;
                     $_SESSION['user_logged_admin'] = true;
@@ -35,12 +35,11 @@ class UserController
                     $_SESSION['page'] = 'horaire.php';
                     header('Location: ./Employe/index.php');
                     exit();
-                    //TODO Utilisateur connecte en tant qu'employe
+
                 }
                 else{
                     header("Location: ./index.php?page=login.php");
                     exit();
-                    //TODO Utilisateur inconnu a l'AD
                 }
 
             }

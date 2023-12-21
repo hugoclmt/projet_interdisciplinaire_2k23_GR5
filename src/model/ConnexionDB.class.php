@@ -8,7 +8,7 @@ class ConnexionDB extends ParentAbstraite
         ParentAbstraite::__construct();
     }
 
-    public function connexion($user,$mdp)
+    public function connexion($user,$mdp) //methode pour se connecter a la bd
     {
         $query = "SELECT mdp FROM employes WHERE identifiant=:identifiant";
         $sql = $this->db->prepare($query);
@@ -25,7 +25,7 @@ class ConnexionDB extends ParentAbstraite
         }
         return null;
     }
-    public function verifier_admin($identifiant)
+    public function verifier_admin($identifiant) //methode pour verifier si l'employe est admin
     {
         $query = "SELECT admin FROM employes WHERE identifiant=:identifiant";
         $resultset = $this->db->prepare($query);
@@ -41,7 +41,7 @@ class ConnexionDB extends ParentAbstraite
         }
     }
 
-    private function hash($mdp)
+    private function hash($mdp) //methode pour hasher le mdp
     {
         return hash('sha256',$mdp);
     }
