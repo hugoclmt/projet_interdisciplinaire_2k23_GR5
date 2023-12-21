@@ -42,6 +42,7 @@ if (isset($_GET['page'])){ //si dans l'url on a un parametre page on le recuoere
     $_SESSION['page'] = $_GET['page']; //on le stock dans la session page
 }
 $path = './src/view/'.$_SESSION['page']; //on initialise la variable path avec le chemin
+var_dump($_SESSION);
 if (file_exists($path)){
     include $path; //on inclut la page si elle existe
 }else{

@@ -1,6 +1,6 @@
 <?php
 include "DbModel.class.php";
-
+/*
 
 abstract class ParentAbstraite
 {

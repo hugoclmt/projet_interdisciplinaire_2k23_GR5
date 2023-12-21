@@ -7,7 +7,7 @@ if (isset($_POST['connexion']))
         {
             $username = $_POST['username'];
             $password = $_POST['password'];
-            $controller->connexionDB($username,$password);
+            $controller->connexionAD($username,$password);
         }else{
             echo "Le nom d'user ou le mot de passe est vide ";
         }
@@ -21,4 +21,8 @@ if (isset($_POST['connexion']))
     <input type="password" name="password" placeholder="Mot de passe" required>
     <input type="hidden" name="crsf" value="<?php echo $crsf_token;?>">
     <input type="submit" name ="connexion" value="Connexion">
+    <?php if (isset($_SESSION['result']))
+        {
+            var_dump($_SESSION);
+        }?>
 </form>

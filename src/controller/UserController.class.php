@@ -7,7 +7,7 @@ class UserController
     private $baseDonnee;
 
     public function __construct(){
-        $this->activeDirectory = new LdapConnexion("192.168.200.1",389,"dc=SERVEUR_GR5,dc=lan");
+        $this->activeDirectory = new LdapConnexion("192.168.200.1",389,"dc=groupe5,dc=lan");
         $this->baseDonnee = new ConnexionDB();
     }
 
@@ -30,7 +30,7 @@ class UserController
                  $_SESSION['username'] = $nameNettoye;
                  $_SESSION['user_logged_employe'] = true;
                  $_SESSION['page'] = 'horaire.php';
-                 header('Location: /Employe/index.php');
+                 header('Location: ./Employe/index.php');
                  exit();
                  //TODO Utilisateur connecte en tant qu'employe
              }
@@ -41,27 +41,37 @@ class UserController
              }
         }
     }
-    public function connexionDB($user,$mdp)
-    {
-        $usernettoye = htmlspecialchars($user);
-        $mdpnettoye = htmlspecialchars($mdp);
-        $result = $this->baseDonnee->connexion($usernettoye,$mdpnettoye);
-        if ($result === true)
+
+
+    public function connexionDB($user,$mdp){
+        $userNettoye = htmlspecialchars($user);
+        $mdpNettoye = htmlspecialchars($mdp);
+        if(!empty($userNettoye) && !empty($mdpNettoye))
         {
-            $_SESSION['username'] = $usernettoye;
-            $_SESSION['user_logged_admin'] = true;
-            $_SESSION['page'] = 'gestion.php';
-            header("Location: ./Administrateur/index.php");
-            exit();
-        }
-        elseif ($result === false){
-            $_SESSION['user_logged_employe'] = true;
-            $_SESSION['page'] = 'horaire.php';
-            header('Location: /Employe/index.php');
-            exit();
-        }else{
-            header("Location: ../index.php?page=login.php");
-            exit();
+            $result = $this->baseDonnee->connexion($userNettoye,$mdpNettoye);
+            $_SESSION['result'] = $result;
+            if ($result === true)
+            {
+                $_SESSION['username'] = $userNettoye;
+                $_SESSION['user_logged_admin'] = true;
+                $_SESSION['page'] = 'gestion.php';
+                header("Location: ./Administrateur/index.php");
+                exit();
+            }
+            elseif ($result === false){
+                $_SESSION['username'] = $userNettoye;
+                $_SESSION['user_logged_employe'] = true;
+                $_SESSION['page'] = 'horaire.php';
+                header('Location: ./Employe/index.php');
+                exit();
+                //TODO Utilisateur connecte en tant qu'employe
+            }
+            else{
+                header("Location: ../index.php?page=login.php");
+                exit();
+                //TODO Utilisateur inconnu a l'AD
+            }
         }
     }
+
 }

@@ -29,6 +29,7 @@ if (is_array($horaire) || $horaire instanceof Countable)
 <h3>Semaine 51</h3>
 <table>
     <?php
+    var_dump($_SESSION);
     for ($i = 0;$i<$nbre_horaire;$i++)
     {
         ?>

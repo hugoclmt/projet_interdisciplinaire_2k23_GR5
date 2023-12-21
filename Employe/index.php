@@ -4,6 +4,21 @@ require_once '../src/controller/AdministrateurController.class.php';
 require_once '../src/controller/EmployeController.class.php';
 $controllerAdmin = new AdministrateurController();
 $controllerEmploye = new EmployeController();
+if (!isset($_SESSION['user_logged_employe']))
+{
+    $_SESSION['page'] = "login.php";
+    header("Location: ../index.php");
+    exit();
+}
+if(isset($_SESSION['user_logged_admin']))
+{
+    $_SESSION['page'] = "gestion.php";
+    header('Location: ../Administrateur/index.php');
+}
+if (empty($_SESSION['page']))
+{
+    $_SESSION['page'] = "horaire.php";
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -17,6 +32,7 @@ $controllerEmploye = new EmployeController();
 </header>
 <body>
     <?php
+    var_dump($_SESSION);
     if(!isset($_SESSION['page'])){ //si la variable sess de page n'a pas été définie
         $_SESSION['page'] = "horaire.php";
     }
