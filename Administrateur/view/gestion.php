@@ -1,7 +1,10 @@
 <?php
 $demande_conge = $controlleur_admin->recuperer_demande_conge(); //on recuperer toutes lse demandes de congé et maladie
 if (is_array($demande_conge) || $demande_conge instanceof Countable) { //on verifie si on peut compter
-$nbre_demande = count($demande_conge); //on compte le nbre de demande pour la bouvle
+    $nbre_demande = count($demande_conge); //on compte le nbre de demande pour la bouvle
+}
+else{
+    $nbre_demande=0;
 }
 
 $types = $controlleur_admin->recuper_type(); //on recupere tout les types de metier qui existent
