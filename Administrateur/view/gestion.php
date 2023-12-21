@@ -117,6 +117,13 @@ if (isset($_POST['submitt'])) {
         <legend>Demandes de congés</legend>
         <div>
             <table>
+                <tr>
+                    <th>Employé</th>
+                    <th>Id employe</th>
+                    <th>Date</th>
+                    <th>Justification</th>
+                    <th>Accepter/Refuser</th>
+                </tr>
             <?php
             for ($i = 0; $i < $nbre_demande; $i++) {
                 if ($demande_conge[$i]['congeconfirm'] == 'En attente'){
@@ -124,6 +131,12 @@ if (isset($_POST['submitt'])) {
                     $id_employe = $demande_conge[$i]['id_employe'];
                     ?>
                     <tr>
+                        <td>
+                        <?php
+                        $nom = $controlleur_admin->recuperer_nom($id_employe);
+                        echo $nom[0]['nom'];
+                        ?>
+                        </td>
                         <td>
                         <?php echo $id_employe; ?>
                         </td>

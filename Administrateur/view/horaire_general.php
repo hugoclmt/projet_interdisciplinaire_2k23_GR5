@@ -43,6 +43,13 @@ if (isset($_POST['submit_semaine']))
         echo '<h3>Semaine '.$week.', '.$annee.'</h3>';
     ?>
     <table>
+        <tr>
+            <th>Id employe</th>
+            <th>Date</th>
+            <th>Horaire</th>
+            <th>Nombre d'heure</th>
+            <th>Etat</th>
+        </tr>
         <?php
         for ($i = 0;$i<$nbre_tout_horaire;$i++)
         {
@@ -50,6 +57,7 @@ if (isset($_POST['submit_semaine']))
             {
             ?>
                 <tr>
+                    <td><?php echo $horaire[$i]['id_employe'] ?></td>
                     <td><?php echo $horaire[$i]['date'] ?></td>
                     <td><?php echo $horaire[$i]['debut'] ?> jusque <?php echo $horaire[$i]['fin']?></td>
                     <td><?php echo $horaire[$i]['nbre_heure']?></td>
