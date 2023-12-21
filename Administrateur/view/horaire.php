@@ -7,8 +7,13 @@ if (isset($_SESSION['username'])) {
     header("Location: ../index.php");
     exit();
 }
-$week = date("W");
-
+//Variables par défaut pour la date et la semaine
+$date_debut = new DateTime();
+$date_debut->modify('monday this week');
+$date_fin = new DateTime();
+$date_fin->add(new DateInterval('P7D'));
+$week = $date_debut->format("W");
+$annee = $date_debut->format("Y");
 if (isset($_POST['submitconge']))
 {
     $str = $_POST['date'];
@@ -50,6 +55,14 @@ if (isset($_POST['submit_horaire']))
     $fin = $_POST['fin'];
     $message = $controlleur_admin->creer_horaire($id_employe,$date,$debut,$fin);
 }
+if (isset($_POST['submit_semaine']))
+{
+    $annee_semaine = explode("-W",$_POST['semaine']); //on recupere l'annee et la semaine
+    $week = $annee_semaine[1];
+    $annee = $annee_semaine[0];
+    $date_debut->setISODate($annee,$week,1);
+    $date_fin->setISODate($annee,$week,7); 
+}
 
 ?>
 <h2>Votre horaire cette semaine</h2>
@@ -57,6 +70,12 @@ if (isset($_POST['submit_horaire']))
 <?php
     echo '<h3>Semaine '.$week.'</h3>';
 ?>
+<div class="h_general">
+<form method="post">
+    <label for="semaine">Choisir une semaine</label>
+    <input type="week" name="semaine" required>
+    <input type="submit" name="submit_semaine" value="Voir cette semaine">
+</form>
 <table>
     <?php
     for ($i = 0;$i<$nbre_horaire;$i++)
