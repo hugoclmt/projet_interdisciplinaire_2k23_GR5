@@ -2,6 +2,7 @@
 $horaire = $controlleur_admin->recuperer_all_horaire();
 //Variables par défaut pour la date et la semaine
 $date_debut = new DateTime();
+$date_debut->modify('monday this week');
 $date_fin = new DateTime();
 $date_fin->add(new DateInterval('P7D'));
 $week = $date_debut->format("W");
