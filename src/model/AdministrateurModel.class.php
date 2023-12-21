@@ -30,17 +30,17 @@ class AdministrateurModel extends EmployeModel
         }
     }
 
-    public function accepter_conge($id_employe) //methode pour accepter le conge de l'employe
+    public function accepter_conge($id_employe,$date) //methode pour accepter le conge de l'employe
     {
         $nbre = $this->recuperer_nbre_conge($id_employe);
         if ($nbre<=30) {
             $statut = "Accepté";
             $this->ajouter_conge();
-            $this->modifier_statut_conge($id_employe, $statut);
+            $this->modifier_statut_conge($id_employe, $statut,$date);
 
         }
         else{
-            $this->refuser_conge($id_employe);
+            $this->refuser_conge($id_employe,$date);
         }
     }
 
@@ -52,10 +52,10 @@ class AdministrateurModel extends EmployeModel
     }
 
 
-    public function refuser_conge($id_employe) //methode pour refuser le conge de l'employe
+    public function refuser_conge($id_employe,$date) //methode pour refuser le conge de l'employe
     {
         $statut = "Refusé";
-        $this->modifier_statut_conge($id_employe,$statut);
+        $this->modifier_statut_conge($id_employe,$statut,$date);
     }
 
 // finis la methode en dessous
@@ -69,12 +69,13 @@ class AdministrateurModel extends EmployeModel
 
     }
 
-    private function modifier_statut_conge($id_employe,$statut){ //fct pour changer le statut d'un employe
+    private function modifier_statut_conge($id_employe,$statut,$date){ //fct pour changer le statut d'un employe
         try{
-                $query = "UPDATE conge SET congeconfirm=:statut WHERE id_employe=:id";
+                $query = "UPDATE conge SET congeconfirm=:statut WHERE id_employe=:id AND date_conge=:date";
                 $resultset = $this->db->prepare($query);
                 $resultset->bindValue(':statut',$statut);
                 $resultset->bindValue(':id',$id_employe);
+                $resultset->bindValue(':date',$date);
                 $resultset->execute();
         }catch(PDOException $e){
 

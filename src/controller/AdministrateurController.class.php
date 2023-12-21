@@ -21,15 +21,15 @@ class AdministrateurController
         }
     }
 
-    public function accepter_conge($id_employe)
+    public function accepter_conge($id_employe,$date)
     {
         $id = htmlspecialchars($id_employe);
-        $this->admin->accepter_conge($id_employe);
+        $this->admin->accepter_conge($id_employe,$date);
     }
 
-    public function refuser_conge($id_employe){
+    public function refuser_conge($id_employe,$date){
         $id =htmlspecialchars($id_employe);
-        $this->admin->refuser_conge($id);
+        $this->admin->refuser_conge($id,$date);
     }
 
     public function recuper_type()

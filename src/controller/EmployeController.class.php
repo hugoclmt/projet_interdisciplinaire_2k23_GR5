@@ -25,6 +25,18 @@ class EmployeController
             }
         }
     }
+    public function voir_confirm_conge($id_employe,$date){
+        $id = htmlspecialchars($id_employe);
+        $dateNettoye = htmlspecialchars($date);
+        $result = $this->modelemploye->voir_confirm_conge($id,$dateNettoye);
+        if ($result!=null)
+        {
+            return $result;
+        }
+        else{
+            return null;
+        }
+    }
 
     public function recuperer_horaire($id)
     {

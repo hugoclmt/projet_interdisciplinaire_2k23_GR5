@@ -24,7 +24,22 @@ class EmployeModel extends ParentAbstraite
 
         }
     }
-
+    public function voir_confirm_conge($id_employe,$date_conge) //methode pour voir si le conge a ete accepter ou refuser
+    {
+        $query = "SELECT congeconfirm FROM conge WHERE id_employe=:id_employe AND date_conge=:date_conge";
+        $resultset = $this->db->prepare($query);
+        $resultset->bindValue(':id_employe',$id_employe);
+        $resultset->bindValue(':date_conge',$date_conge);
+        $resultset->execute();
+        $result = $resultset->fetch(PDO::FETCH_ASSOC);
+        if (!empty($result) && isset($result['congeconfirm']))
+        {
+            return $result['congeconfirm'];
+        }
+        else{
+            return null;
+        }
+    }
 
     public function recuperer_horaire($id_employe) //methode pour recuperer les horaires
     {

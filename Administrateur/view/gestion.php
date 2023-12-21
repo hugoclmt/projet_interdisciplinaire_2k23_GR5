@@ -13,14 +13,16 @@ if (isset($_POST['accepter'])) { //si il appuie sur l'input accepter
     $id_conge = $_POST['id_conge']; // on stock l'id du conge
     $_SESSION['clicked_' . $id_conge] = 'accepter'; //on stock en session pour dire qu'on a appuie sur le bouton accepter
     $id = $_POST['id_user']; //on stock l'id de l'user
-    $controlleur_admin->accepter_conge($id); //on appelle le controleur pour accepter la demande de conge
+    $date = $_POST['date']; //on stock la date
+    $controlleur_admin->accepter_conge($id,$date); //on appelle le controleur pour accepter la demande de conge
 }
 
 if (isset($_POST['refuser'])) {
     $id_conge = $_POST['id_conge'];
     $_SESSION['clicked_' . $id_conge] = 'refuser';
     $id = $_POST['id_user'];
-    $controlleur_admin->refuser_conge($id);
+    $date = $_POST['date']; //on stock la date
+    $controlleur_admin->refuser_conge($id,$date);
 }
 
 $nbre_users = 0;
@@ -117,35 +119,38 @@ if (isset($_POST['submitt'])) {
             <table>
             <?php
             for ($i = 0; $i < $nbre_demande; $i++) {
-                $id_conge = $demande_conge[$i]['id_conge'];
-                $id_employe = $demande_conge[$i]['id_employe'];
-                ?>
-                <tr>
-                    <td>
-                    <?php echo $id_employe; ?>
-                    </td>
-                    <td>
-                    <?php echo $demande_conge[$i]['date_conge']; ?>
-                    </td>
-                    <td>
-                    <?php echo $demande_conge[$i]['justification']; ?>
-                    </td>
-                    <td>
-                <?php
-                if (!isset($_SESSION['clicked_' . $id_conge])) {
+                if ($demande_conge[$i]['congeconfirm'] == 'En attente'){
+                    $id_conge = $demande_conge[$i]['id_conge'];
+                    $id_employe = $demande_conge[$i]['id_employe'];
                     ?>
-                    <form action="index.php" method="post" id='gestion_conge'>
-                        <input type="hidden" name="id_user" value="<?php echo $id_employe; ?>">
-                        <input type="hidden" name="id_conge" value="<?php echo $id_conge; ?>">
-                        <input type="submit" name="accepter" value="Accepter">
-                        <input type="submit" name="refuser" value="Refuser">
-                    </form>
+                    <tr>
+                        <td>
+                        <?php echo $id_employe; ?>
+                        </td>
+                        <td>
+                        <?php echo $demande_conge[$i]['date_conge']; ?>
+                        </td>
+                        <td>
+                        <?php echo $demande_conge[$i]['justification']; ?>
+                        </td>
+                        <td>
                     <?php
-                } else {
-                    "<br>"; echo " Décision déjà prise : " . $_SESSION['clicked_' . $id_conge];"<br>";
+                    if (!isset($_SESSION['clicked_' . $id_conge])) {
+                        ?>
+                        <form action="index.php" method="post" id='gestion_conge'>
+                            <input type="hidden" name="id_user" value="<?php echo $id_employe; ?>">
+                            <input type="hidden" name="id_conge" value="<?php echo $id_conge; ?>">
+                            <input type="hidden" name="date" value="<?php echo $demande_conge[$i]['date_conge']; ?>"> 
+                            <input type="submit" name="accepter" value="Accepter">
+                            <input type="submit" name="refuser" value="Refuser">
+                        </form>
+                        <?php
+                    } else {
+                        "<br>"; echo " Décision déjà prise : " . $_SESSION['clicked_' . $id_conge];"<br>";
+                    }
+                    echo '</td></tr>';
                 }
-                echo '</td></tr>';
-            }
+                }
             ?>
             </table>
         </div>
