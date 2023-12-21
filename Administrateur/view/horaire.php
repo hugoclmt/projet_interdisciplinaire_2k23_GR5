@@ -7,6 +7,7 @@ if (isset($_SESSION['username'])) {
     header("Location: ../index.php");
     exit();
 }
+$week = date("W");
 
 if (isset($_POST['submitconge']))
 {
@@ -51,11 +52,11 @@ if (isset($_POST['submit_horaire']))
 }
 
 ?>
-
-
-<h2>Votre horaire</h2>
-
-<h3>Semaine 51</h3>
+<h2>Votre horaire cette semaine</h2>
+<div>
+<?php
+    echo '<h3>Semaine '.$week.'</h3>';
+?>
 <table>
     <?php
     for ($i = 0;$i<$nbre_horaire;$i++)
@@ -72,7 +73,8 @@ if (isset($_POST['submit_horaire']))
         ?>
 
 </table>
-
+</div>
+<div>
 <form method="post">
     <fieldset>
         <legend>Demander un congé</legend>
@@ -91,8 +93,11 @@ if (isset($message))
     echo $message;
 }
 ?>
+</div>
+
 <?php if(!$vu)
 { ?>
+    <div>
     <form method="post">
         <fieldset>
             <legend>Creation horaire</legend>
@@ -111,9 +116,11 @@ if (isset($message))
             <input type="submit" name="submittype">
         </fieldset>
     </form>
+    </div>
 <?php
 }else{
-?>
+?>  
+    <div>
     <form method="post">
         <fieldset>
             <label for="employe">Employe :</label>
@@ -136,6 +143,7 @@ if (isset($message))
             <input type="submit" name="submit_horaire">
         </fieldset>
     </form>
+    </div>
 <?php
     echo $message;
 }?>

@@ -1,4 +1,5 @@
 <nav>
+    <h1>Applications Horaires</h1>
     <ul>
         <li><a href="index.php?page=horaire.php">Horaire</a></li>
         <li><a href="index.php?page=gestion.php">Gestion</a></li>

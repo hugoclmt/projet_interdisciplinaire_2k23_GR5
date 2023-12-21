@@ -23,7 +23,7 @@ $controlleur_employe = new EmployeController();
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-
+<link href="../lib/css/style1.css?v=vvvv" rel="stylesheet">
 </head>
 <header>
     <?php
@@ -51,5 +51,12 @@ if (file_exists($path)) //Si le fichier existe
 
 ?>
 </body>
+<footer>
+    <?php
+    if (file_exists('../lib/php/footer/footer.php')){//si footer existe on l'inclut
+        include ('../lib/php/footer/footer.php');
+    }
+    ?>
+</footer>
 </html>
 

@@ -114,16 +114,27 @@ if (isset($_POST['submitt'])) {
     <fieldset>
         <legend>Demandes de congés</legend>
         <div>
+            <table>
             <?php
             for ($i = 0; $i < $nbre_demande; $i++) {
                 $id_conge = $demande_conge[$i]['id_conge'];
                 $id_employe = $demande_conge[$i]['id_employe'];
                 ?>
-                <span><?php echo $id_employe; ?> | <?php echo $demande_conge[$i]['date_conge']; ?> | <?php echo $demande_conge[$i]['justification']; ?></span>
+                <tr>
+                    <td>
+                    <?php echo $id_employe; ?>
+                    </td>
+                    <td>
+                    <?php echo $demande_conge[$i]['date_conge']; ?>
+                    </td>
+                    <td>
+                    <?php echo $demande_conge[$i]['justification']; ?>
+                    </td>
+                    <td>
                 <?php
                 if (!isset($_SESSION['clicked_' . $id_conge])) {
                     ?>
-                    <form action="index.php" method="post">
+                    <form action="index.php" method="post" id='gestion_conge'>
                         <input type="hidden" name="id_user" value="<?php echo $id_employe; ?>">
                         <input type="hidden" name="id_conge" value="<?php echo $id_conge; ?>">
                         <input type="submit" name="accepter" value="Accepter">
@@ -133,8 +144,10 @@ if (isset($_POST['submitt'])) {
                 } else {
                     "<br>"; echo " Décision déjà prise : " . $_SESSION['clicked_' . $id_conge];"<br>";
                 }
+                echo '</td></tr>';
             }
             ?>
+            </table>
         </div>
     </fieldset>
 </div>

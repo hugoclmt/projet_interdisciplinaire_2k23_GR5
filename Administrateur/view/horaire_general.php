@@ -25,30 +25,33 @@ if (isset($_POST['submit_semaine']))
 ?>
 
 <h2>Horaire Generale</h2>
+<div>
 <form method="post">
     <label for="semaine">Choisir une semaine</label>
     <input type="week" name="semaine" required>
     <input type="submit" name="submit_semaine" value="Voir cette semaine">
-</from>
-<?php
-    echo '<h3>Semaine '.$week.', '.$annee.'</h3>';
-?>
-<table>
+</form>
+</div>
+<div>
     <?php
-    for ($i = 0;$i<$nbre_tout_horaire;$i++)
-    {
-        if ($horaire[$i]['date'] >= $date_debut->format("Y-m-d") && $horaire[$i]['date'] <= $date_fin->format("Y-m-d"))
-        {
-        ?>
-            <tr>
-                <td><?php echo $horaire[$i]['date'] ?></td>
-                <td><?php echo $horaire[$i]['debut'] ?> jusque <?php echo $horaire[$i]['fin']?></td>
-                <td><?php echo $horaire[$i]['nbre_heure']?></td>
-                <td>si dmd accepte</td>
-            </tr>
-        <?php
-        }
-    }
+        echo '<h3>Semaine '.$week.', '.$annee.'</h3>';
     ?>
-
-</table>
+    <table>
+        <?php
+        for ($i = 0;$i<$nbre_tout_horaire;$i++)
+        {
+            if ($horaire[$i]['date'] >= $date_debut->format("Y-m-d") && $horaire[$i]['date'] <= $date_fin->format("Y-m-d"))
+            {
+            ?>
+                <tr>
+                    <td><?php echo $horaire[$i]['date'] ?></td>
+                    <td><?php echo $horaire[$i]['debut'] ?> jusque <?php echo $horaire[$i]['fin']?></td>
+                    <td><?php echo $horaire[$i]['nbre_heure']?></td>
+                    <td>si dmd accepte</td>
+                </tr>
+            <?php
+            }
+        }
+        ?>
+    </table>
+</div>
