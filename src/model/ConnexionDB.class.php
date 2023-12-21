@@ -37,12 +37,18 @@ class ConnexionDB extends ParentAbstraite
     }
     private function verifier_admin($identifiant,$mdp)
     {
-        $query = "SELECT * FROM employes WHERE identifiant=:identifiant AND mdp=:mdp AND admin=:nbre";
+        $query = "SELECT admin FROM employes WHERE identifiant=:identifiant";
         $resultset = $this->db->prepare($query);
         $resultset->bindValue(':identifiant',$identifiant);
-        $resultset->bindValue(':mdp',$mdp);
-        $resultset->bindValue(':nbre',1);
-        return $resultset->execute();
+        $resultset->execute();
+        $result = $resultset->fetch();
+        if ($result['admin'] == 1)
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     private function hash($mdp)
