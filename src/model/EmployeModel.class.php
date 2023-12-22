@@ -24,6 +24,18 @@ class EmployeModel extends ParentAbstraite
 
         }
     }
+    public function prevenir_maladie($id_employe,$date,$justificatif){
+        $statut = "Accepté";
+        $query = "INSERT INTO conge (id_employe,date_conge,justification,congeconfirm) VALUES (:id_employe,:date,:justification,'Accepté')";
+        $resultset = $this->db->prepare($query);
+        echo $id_employe;
+        echo $date;
+        echo $justificatif;
+        $resultset->bindValue(':id_employe',(int)$id_employe);
+        $resultset->bindValue(':date',$date);
+        $resultset->bindValue(':justification',$justificatif);
+        return $resultset->execute();
+    }
     public function voir_confirm_conge($id_employe,$date_conge) //methode pour voir si le conge a ete accepter ou refuser
     {
         $query = "SELECT congeconfirm FROM conge WHERE id_employe=:id_employe AND date_conge=:date_conge";

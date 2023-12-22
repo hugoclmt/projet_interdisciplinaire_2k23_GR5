@@ -141,7 +141,12 @@ if (isset($_POST['submitt'])) {
                         <?php
                             $nom = $controlleur_admin->recuperer_identifiant($id_employe);
                             $nom = explode(".", $nom[0]['identifiant']);
-                            echo ucfirst($nom[0]) . " " . ucfirst($nom[1]);
+                            if (!empty($nom[1])){
+                                echo ucfirst($nom[0]) . " " . ucfirst($nom[1]);
+                            }
+                            else{
+                                echo ucfirst($nom[0]);
+                            }
                         ?>
                         </td>
                         <td>

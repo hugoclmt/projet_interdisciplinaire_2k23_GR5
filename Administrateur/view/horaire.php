@@ -23,12 +23,12 @@ if (isset($_POST['submitconge'])) //si on appuie sur le bouton pour dmd ses cong
         $str = $_POST['date']; //on recupere la date
         $date = new DateTime($str); //on la met dans un objet DateTime
         $justification = $_POST['demande']; //on recupere la justification
-        $message = $controllerEmploye->demander_conge($date, $justification, $id); //on appelle la methode demander_conge du controller
+        $message = $controlleur_employe->demander_conge($date, $justification, $id); //on appelle la methode demander_conge du controller
     }else{
         $str = $_POST['date']; //on recupere la date
         $date = new DateTime($str); //on la met dans un objet DateTime
         $justification = $_POST['demande']; //on recupere la justification
-        $message = $controllerEmploye->prevenir_maladie($date, $justification, $id); //on appelle la methode demander_conge du controller
+        $message = $controlleur_employe->prevenir_maladie($justification,$date->format("Y-m-d"), $id); //on appelle la methode demander_conge du controller
     }
 }
 

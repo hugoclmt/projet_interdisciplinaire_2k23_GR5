@@ -4,7 +4,7 @@ $horaire = $controlleur_admin->recuperer_all_horaire(); //on recupere tous les h
 $date_debut = new DateTime();
 $date_debut->modify('monday this week');
 $date_fin = new DateTime();
-$date_fin->add(new DateInterval('P7D'));
+$date_fin->modify('sunday this week');
 $week = $date_debut->format("W");
 $annee = $date_debut->format("Y");
 
