@@ -23,7 +23,7 @@ $crsf_token = $_SESSION['crsf_token']; //on stock le token dans une variable
 <head>
     <title>Centerpark</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link href="lib/css/style1.css?v=vv" rel="stylesheet">
+    <link href="lib/css/style1.css?v=vvv" rel="stylesheet">
 </head>
 <header>
     <?php

@@ -35,7 +35,7 @@ class AdministrateurModel extends EmployeModel
         $nbre = $this->recuperer_nbre_conge($id_employe);
         if ($nbre<=30) {
             $statut = "Accepté";
-            $this->ajouter_conge();
+            $this->ajouter_conge($id_employe);
             $this->modifier_statut_conge($id_employe, $statut,$date);
 
         }
@@ -44,10 +44,11 @@ class AdministrateurModel extends EmployeModel
         }
     }
 
-    private function ajouter_conge() //methode pour ajouter un conge
+    private function ajouter_conge($id_employe) //methode pour ajouter un conge
     {
-        $query = "UPDATE employes SET nbre_conges = nbre_conges + 1";
+        $query = "UPDATE employes SET nbre_conges = nbre_conges + 1 WHERE id_employe=:id_employe";
         $resultset = $this->db->prepare($query);
+        $resultset->bindValue(':id_employe',$id_employe);
         $resultset->execute();
     }
 
@@ -97,8 +98,7 @@ class AdministrateurModel extends EmployeModel
         // Convertir les heures en objets DateTime
         $t1 = new DateTime($heure1.':00');
         $t2 = new DateTime($heure2.':00');
-        $interval = $t2->diff($t1)->format('%H:%I:%S'); //On calcule la différence entre les deux heures
-        echo $interval;
+        $interval = $t2->diff($t1); //On calcule la différence entre les deux heures
         return $interval;
     }
 
@@ -157,7 +157,11 @@ class AdministrateurModel extends EmployeModel
         $resultset->execute();
         $result = $resultset->fetchall(PDO::FETCH_ASSOC);
         if (!empty($result)){
-            return $result;
+            $heure_total = substr_replace($result[0]['SUM(nbre_heure)'],':',-2,0);
+            $heure_total = substr_replace($heure_total,':',-5,0);
+            $heure_minutes_secondes = explode(':', $heure_total);
+            $nbre_heure = new DateInterval(sprintf('PT%dH%dM%dS', $heure_minutes_secondes[0], $heure_minutes_secondes[1], $heure_minutes_secondes[2]));
+            return $nbre_heure;
         }
         else{
             return null;
@@ -182,11 +186,18 @@ class AdministrateurModel extends EmployeModel
 
     public function creer_horaire($id_employe,$date,$debut,$fin) //methode pour creer un horaire
     {
-        $h_totale = 38;
+        $datecomparable = new DateTime();
+        $datecomparable2= new DateTime();
+        $h_totale = new DateInterval('PT38H');
         $nbre_heure = $this->calculerDifferenceHeures($debut,$fin); //calculer la difference entre l'heure de debut et l'heure de fin
         $nbre_heure_totale = $this->recuperer_nbre_heure($id_employe); //recuperer le nombre d'heure de l'employe
-        $nbre_heure_totale = floatval($nbre_heure_totale[0]['SUM(nbre_heure)']); //recuperer le nombre d'heure de l'employe
-        if ($nbre_heure_totale + $nbre_heure<=$h_totale)
+
+        $dateadd1 = new DateTime('00:00:00');
+        $dateadd2 = new DateTime('00:00:00');
+        $dateadd1->add($nbre_heure_totale); //ajouter le nombre d'heure de l'employe a 00:00:00
+        $dateadd1->add($nbre_heure); //ajouter la difference entre l'heure de debut et l'heure de fin a 00:00:00
+        $heure_employe_max = $dateadd2->diff($dateadd1); //DateInterval qui vaut la somme des heures de travail de la semaine + les heures de travail du formulaire
+        if (date_add($datecomparable,$h_totale) >= date_add($datecomparable2,$heure_employe_max))
         {
             $query = "INSERT INTO jour_horaire (id_employe,date,debut,fin,nbre_heure) VALUES (:id_employe,:date,:debut,:fin,:nbre_heure)";
             $resultset = $this->db->prepare($query);
@@ -194,7 +205,7 @@ class AdministrateurModel extends EmployeModel
             $resultset->bindValue(':date',$date);
             $resultset->bindValue(':debut',$debut);
             $resultset->bindValue(':fin',$fin);
-            $resultset->bindValue(':nbre_heure',$nbre_heure);
+            $resultset->bindValue(':nbre_heure',$nbre_heure->format('%H:%I:%S'));
             $result=  $resultset->execute();
             if ($result)
             {

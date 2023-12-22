@@ -29,7 +29,7 @@ class UserController
                     header("Location: ./Administrateur/index.php");
                     exit();
                 }
-                elseif ($result == false){
+                elseif (!$result_admin){
                     $_SESSION['username'] = $nameNettoye;
                     $_SESSION['user_logged_employe'] = true;
                     $_SESSION['page'] = 'horaire.php';

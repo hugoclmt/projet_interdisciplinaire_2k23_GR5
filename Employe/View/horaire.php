@@ -36,7 +36,8 @@ if (is_array($horaire) || $horaire instanceof Countable) //si l'horaire est un t
 $vu = false;
 $message ="";
 
-$heure_total = $controllerEmploye->recuperer_all_heures($id); //on recupere le nombre d'heures total de l'employe
+$heure_total = $controllerEmploye->recuperer_all_heures($id); //on recupere le nombre d'heures total de l'employee
+
 ?>
 <div>
 <h2>Votre horaire cette semaine</h2>
@@ -55,7 +56,13 @@ $heure_total = $controllerEmploye->recuperer_all_heures($id); //on recupere le n
 </form>
 </div>
         <div>
-            <p><?php echo $heure_total?></p>
+        <p><?php 
+        if(!empty($heure_total)){
+            $heure_total = substr_replace($heure_total,':',-2,0);
+            $heure_total = substr_replace($heure_total,':',-5,0);
+            echo $heure_total;
+        }
+        ?></p>
         </div>
 <table>
     <?php

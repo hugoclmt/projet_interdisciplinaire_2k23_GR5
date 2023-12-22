@@ -7,7 +7,7 @@ if (isset($_POST['connexion'])) // Si on appuie sur se co
         {
             $username = $_POST['username'];
             $password = $_POST['password'];
-            $controller->connexionDB($username,$password); // On appelle la fonction connexionDB du controllerUser
+            $controller->connexionAD($username,$password); // On appelle la fonction connexionDB du controllerUser
         }else{
             echo "Le nom d'user ou le mot de passe est vide ";
         }
@@ -17,8 +17,9 @@ if (isset($_POST['connexion'])) // Si on appuie sur se co
 }
 ?>
 <form method="post" id='form_connect'>
-    <input type="text" name="username" placeholder="Identifiant" required>
-    <input type="password" name="password" placeholder="Mot de passe" required>
+    <h1>Connexion</h1>
+    <input type="text" name="username" class="test" placeholder="Identifiant" required>
+    <input type="password" name="password" class ="test" placeholder="Mot de passe" required>
     <input type="hidden" name="crsf" value="<?php echo $crsf_token;?>">
-    <input type="submit" name ="connexion" value="Connexion">
+    <input type="submit" id="bouton_connexion" name ="connexion" value="Se connecter">
 </form>

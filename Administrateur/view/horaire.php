@@ -84,7 +84,10 @@ $heure_total = $controlleur_employe->recuperer_all_heures($id); //on recupere le
 </form>
 </div>
         <div>
-            <p><?php echo $heure_total?></p>
+            <p><?php 
+            $heure_total = substr_replace($heure_total,':',-2,0);
+            $heure_total = substr_replace($heure_total,':',-5,0);
+            echo $heure_total?></p>
         </div>
 <table>
     <?php
