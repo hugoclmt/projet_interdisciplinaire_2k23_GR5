@@ -23,7 +23,7 @@ $controlleur_employe = new EmployeController(); //on instancie l'objet controlle
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<link href="../lib/css/style1.css?v=v" rel="stylesheet">
+<link href="../lib/css/style1.css?v=vv" rel="stylesheet">
 </head>
 <header>
     <?php

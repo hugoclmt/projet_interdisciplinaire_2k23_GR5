@@ -11,8 +11,8 @@ class DbModel
     public function __construct(){ //appele lors de l'instanciation
         $this->host = "localhost"; //nom de hote
         $this->dbName = "testinterdisciplinaire"; //nom de la db
-        $this->user = "Admin"; //nom de l'user
-        $this->mdp = "Test123*"; //mdp
+        $this->user = "root"; //nom de l'user
+        $this->mdp = ""; //mdp
         $this->pdo = null; //pdo
 
         $this->connect(); //appelle la fonction connect lors de l'initialisation de l'objet

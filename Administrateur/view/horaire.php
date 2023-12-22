@@ -54,6 +54,10 @@ if (isset($_POST['submit_horaire'])) //si on appuie sur le bouton pour creer un 
     $debut = $_POST['debut']; //on recupere l'heure de debut
     $fin = $_POST['fin']; //on recupere l'heure de fin
     $message = $controlleur_admin->creer_horaire($id_employe,$date,$debut,$fin); //on appelle la methode creer_horaire du controller
+    $_POST = array();
+    $id_employe = null;
+    $date = null;
+    $debut = null;
 }
 if (isset($_POST['submit_semaine'])) //si on appuie sur le bouton pour voir une semaine
 {
@@ -64,7 +68,7 @@ if (isset($_POST['submit_semaine'])) //si on appuie sur le bouton pour voir une 
     $date_fin->setISODate($annee,$week,7); 
 }
 
-$heure_total = $controlleur_employe->recuperer_all_heures($id); //on recupere le nombre d'heure total de l'employe
+$heure_total = $controlleur_employe->recuperer_all_heures($id,$week); //on recupere le nombre d'heure total de l'employe
 
 ?>
 <div>
@@ -90,9 +94,17 @@ $heure_total = $controlleur_employe->recuperer_all_heures($id); //on recupere le
             echo $heure_total?></p>
         </div>
 <table>
+        <tr>
+            <th>Date</th>
+            <th>Horaire</th>
+            <th>Nombre d'heure</th>
+            <th>Etat congé</th>
+        </tr>
     <?php
     for ($i = 0;$i<$nbre_horaire;$i++)
     {
+        if ($horaire[$i]['date'] >= $date_debut->format("Y-m-d") && $horaire[$i]['date'] <= $date_fin->format("Y-m-d"))
+            {
     ?>
         <tr>
             <td><?php echo $horaire[$i]['date'] ?></td>
@@ -113,6 +125,7 @@ $heure_total = $controlleur_employe->recuperer_all_heures($id); //on recupere le
         </tr>
         <?php
     }
+}
         ?>
 
 </table>

@@ -7,7 +7,7 @@ if (isset($_POST['connexion'])) // Si on appuie sur se co
         {
             $username = $_POST['username'];
             $password = $_POST['password'];
-            $controller->connexionAD($username,$password); // On appelle la fonction connexionDB du controllerUser
+            $controller->connexionDB($username,$password); // On appelle la fonction connexionDB du controllerUser
         }else{
             echo "Le nom d'user ou le mot de passe est vide ";
         }

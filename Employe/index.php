@@ -25,7 +25,7 @@ if (empty($_SESSION['page'])) //si la variable sess de page est vide
 <head>
     <title>Centerpark</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link href="../lib/css/style1.css?v=v" rel="stylesheet">
+    <link href="../lib/css/style1.css?v=vv" rel="stylesheet">
 </head>
 <header>
     <?php
