@@ -34,7 +34,7 @@ if(isset($_POST['connexion'])){ //Vérification de la connexion
 
 
 ?>
-<form method="post">
+<form method="post" id="form_connect">
     <input type="text" name="username" placeholder="Identifiant">
     <input type="password" name="password" placeholder="Mot de passe">
     <input type="submit" name ="connexion" value="Connexion">

@@ -64,7 +64,7 @@ if (isset($_POST['submit_semaine'])) //si on appuie sur le bouton pour voir une 
     $date_fin->setISODate($annee,$week,7); 
 }
 
-$heure_total = $controlleur_employee->recuperer_heure_total($id); //on recupere le nombre d'heure total de l'employe
+$heure_total = $controlleur_employe->recuperer_all_heures($id); //on recupere le nombre d'heure total de l'employe
 
 ?>
 <div>
@@ -120,10 +120,10 @@ $heure_total = $controlleur_employee->recuperer_heure_total($id); //on recupere 
     <fieldset>
         <legend>Demander un congé</legend>
         <label for="date">Date :</label>
-        <input type="date" id="date" name="date"><br>
+        <input type="date" id="date" name="date" required><br>
 
         <label for="demande">Demander un congé :</label>
-        <textarea id="demande" name="demande"></textarea><br>
+        <textarea id="demande" name="demande" required></textarea><br>
 
         <input type="submit" name="submitconge">
     </fieldset>
@@ -165,7 +165,7 @@ if (isset($message))
     <form method="post">
         <fieldset>
             <label for="employe">Employe :</label>
-            <select id="employe" name="employe">
+            <select id="employe" name="employe" required>
                 <?php
                 for ($i = 0;$i<$nbre_users;$i++)
                 {
@@ -176,11 +176,11 @@ if (isset($message))
                 ?>
             </select>
             <label for="date">Date :</label>
-            <input type="date" id="date" name="date"><br>
+            <input type="date" id="date" name="date" required><br>
             <label for="debut">Debut d'horaire :</label>
-            <input type="time" id="debut" name="debut"><br>
+            <input type="time" id="debut" name="debut" required><br>
             <label for="fin">Fin d'horaire :</label>
-            <input type="time" id="fin" name="fin"><br>
+            <input type="time" id="fin" name="fin" required><br>
             <input type="submit" name="submit_horaire">
         </fieldset>
     </form>

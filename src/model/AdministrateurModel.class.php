@@ -95,12 +95,11 @@ class AdministrateurModel extends EmployeModel
 
     private function calculerDifferenceHeures($heure1, $heure2) {  //methode pour calculer la difference entre deux heures
         // Convertir les heures en objets DateTime
-        $datetime1 = new DateTime($heure1);
-        $datetime2 = new DateTime($heure2);
-
-        $interval = $datetime1->diff($datetime2);
-
-        return $interval->format('%H:%I:%S');;
+        $t1 = new DateTime($heure1.':00');
+        $t2 = new DateTime($heure2.':00');
+        $interval = $t2->diff($t1)->format('%H:%I:%S'); //On calcule la différence entre les deux heures
+        echo $interval;
+        return $interval;
     }
 
 
@@ -184,7 +183,7 @@ class AdministrateurModel extends EmployeModel
     public function creer_horaire($id_employe,$date,$debut,$fin) //methode pour creer un horaire
     {
         $h_totale = 38;
-        $nbre_heure = floatval($this->calculerDifferenceHeures($debut,$fin)); //calculer la difference entre l'heure de debut et l'heure de fin
+        $nbre_heure = $this->calculerDifferenceHeures($debut,$fin); //calculer la difference entre l'heure de debut et l'heure de fin
         $nbre_heure_totale = $this->recuperer_nbre_heure($id_employe); //recuperer le nombre d'heure de l'employe
         $nbre_heure_totale = floatval($nbre_heure_totale[0]['SUM(nbre_heure)']); //recuperer le nombre d'heure de l'employe
         if ($nbre_heure_totale + $nbre_heure<=$h_totale)
