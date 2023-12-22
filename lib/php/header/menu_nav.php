@@ -1,5 +1,8 @@
 <nav>
-    <h1>Applications Horaires</h1>
+<div id="logo">
+<img src="/../../../img/logoisimscalendar.png" alt="logo">    
+<h1>Application Horaires</h1>
+</div>
     <?php
         if (isset($_SESSION['user_logged_admin']) || isset($_SESSION['user_logged_employe'])) {
             echo '<ul>';
