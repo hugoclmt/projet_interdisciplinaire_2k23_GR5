@@ -11,10 +11,17 @@ $annee = $date_debut->format("Y");
 $id = $controllerEmploye->get_id($_SESSION['username']); //on recupere l'id de l'employe
 if (isset($_POST['submitconge'])) //si on appuie sur le bouton pour dmd ses conge
 {
-    $str = $_POST['date']; //on recupere la date
-    $date = new DateTime($str); //on la met dans un objet DateTime
-    $justification = $_POST['demande']; //on recupere la justification
-    $message = $controllerEmploye->demander_conge($date,$justification,$id); //on appelle la methode demander_conge du controller
+    if (!isset($_POST['maladie'])) { //si on est malade
+        $str = $_POST['date']; //on recupere la date
+        $date = new DateTime($str); //on la met dans un objet DateTime
+        $justification = $_POST['demande']; //on recupere la justification
+        $message = $controllerEmploye->demander_conge($date, $justification, $id); //on appelle la methode demander_conge du controller
+    }else{
+        $str = $_POST['date']; //on recupere la date
+        $date = new DateTime($str); //on la met dans un objet DateTime
+        $justification = $_POST['demande']; //on recupere la justification
+        $message = $controllerEmploye->prevenir_maladie($date, $justification, $id); //on appelle la methode demander_conge du controller
+    }
 }
 if (isset($_POST['submit_semaine'])) //si on appuie sur le bouton pour voir une semaine
 {
@@ -25,7 +32,7 @@ if (isset($_POST['submit_semaine'])) //si on appuie sur le bouton pour voir une 
     $date_fin->setISODate($annee,$week,7); 
 }
 
-$horaire = $controllerEmploye->recuperer_horaire($id); //on recupere l'horaire de l'employe
+$horaire = $controllerEmploye->recuperer_horaire($id,$week); //on recupere l'horaire de l'employe
 $nbre_horaire =0; //on initialise le nombre d'horaire
 if (is_array($horaire) || $horaire instanceof Countable) //si l'horaire est un tableau
 {
@@ -36,7 +43,7 @@ if (is_array($horaire) || $horaire instanceof Countable) //si l'horaire est un t
 $vu = false;
 $message ="";
 
-$heure_total = $controlleur_employe->recuperer_all_heures($id,$date_debut);
+$heure_total = $controllerEmploye->recuperer_all_heures($id,$date_debut->format("Y-m-d"),$date_fin->format("Y-m-d"));
 
 ?>
 <div>
@@ -106,6 +113,8 @@ $heure_total = $controlleur_employe->recuperer_all_heures($id,$date_debut);
 <form method="post">
     <fieldset>
         <legend>Demander un congé</legend>
+        <label for ="maladie">Maladie :</label>
+        <input type="checkbox" name="maladie" value="malade"><br>
         <label for="date">Date :</label>
         <input type="date" id="date" name="date"><br>
 

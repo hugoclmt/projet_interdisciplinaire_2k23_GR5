@@ -67,7 +67,7 @@ class AdministrateurController
     }
 
     public function rappeler_employe($id_employe,$date,$debut,$fin) //methode pour rappeler un employe
-    {
+    {   
         $result = $this->admin->rappeller_employe($id_employe,$date,$debut,$fin); //on appelle la methode rappeller_employe du modele admin
         if ($result)
         {

@@ -25,6 +25,21 @@ class EmployeController
             }
         }
     }
+    public function prevenir_maladie($date,$justificatif,$id_employe)
+    {
+        $justificatif = htmlspecialchars($justificatif); //nettoyage des données
+        if (!empty($id_employe) && !empty($date) && !empty($justificatif))
+        {
+            $result = $this->modelemploye->prevenir_maladie($date,$justificatif,$id_employe); //appel de la methode prevenir_maladie du modeleemploye
+            if ($result)
+            {
+                return "jour de maladie envoyé";
+            }
+            else{
+                return "Erreur lors de l'envoi de la demande";
+            }
+        }
+    }
     public function voir_confirm_conge($id_employe,$date){ //methode pour voir si le conge a été accepté ou refusé
         $id = htmlspecialchars($id_employe); //nettoyage des données
         $dateNettoye = htmlspecialchars($date); //nettoyage des données
@@ -38,9 +53,9 @@ class EmployeController
         }
     }
 
-    public function recuperer_horaire($id) //methode pour recuperer les horaires
+    public function recuperer_horaire($id,$week) //methode pour recuperer les horaires
     {
-        $horaire = $this->modelemploye->recuperer_horaire($id); //appel de la methode recuperer_horaire du modeleemploye
+        $horaire = $this->modelemploye->recuperer_horaire($id,$week); //appel de la methode recuperer_horaire du modeleemploye
         if ($horaire!=null){
             return $horaire;
         }
@@ -62,9 +77,9 @@ class EmployeController
         }
     }
 
-    public function recuperer_all_heures($id) //methode pour recuperer toutes les heures de l'employe
+    public function recuperer_all_heures($id,$date_debut,$date_fin) //methode pour recuperer toutes les heures de l'employe
     {
-        $heures = $this->modelemploye->get_all_hours($id); //appel de la methode get_all_hours du modeleemploye
+        $heures = $this->modelemploye->get_all_hours($id,$date_debut,$date_fin); //appel de la methode get_all_hours du modeleemploye
         if ($heures!=null){
             return $heures;
         }

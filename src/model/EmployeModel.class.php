@@ -43,7 +43,7 @@ class EmployeModel extends ParentAbstraite
 
     public function recuperer_horaire($id_employe) //methode pour recuperer les horaires
     {
-        $query = "SELECT * FROM jour_horaire WHERE id_employe=:id_employe";
+        $query = "SELECT * FROM jour_horaire WHERE id_employe=:id_employe ORDER BY date ASC";
         $resultset = $this->db->prepare($query);
         $resultset->bindValue(':id_employe',$id_employe);
         $resultset->execute();
@@ -89,11 +89,13 @@ class EmployeModel extends ParentAbstraite
         }
     }
 
-    public function get_all_hours($id_employe) //methode pour recuperer le nombre d'heure total de l'employe
+    public function get_all_hours($id_employe,$date_debut,$date_fin) //methode pour recuperer le nombre d'heure total de l'employe
     {
-        $query = "SELECT SUM(nbre_heure) FROM jour_horaire WHERE id_employe=:id_employe";
+        $query = "SELECT SUM(nbre_heure) FROM jour_horaire WHERE id_employe=:id_employe AND date BETWEEN :date_debut AND :date_fin";
         $resultset = $this->db->prepare($query);
         $resultset->bindValue(':id_employe',$id_employe);
+        $resultset->bindValue(':date_debut',$date_debut);
+        $resultset->bindValue(':date_fin',$date_fin);
         $resultset->execute();
         $result = $resultset->fetch(PDO::FETCH_ASSOC);
         if (!empty($result) && isset($result['SUM(nbre_heure)']))

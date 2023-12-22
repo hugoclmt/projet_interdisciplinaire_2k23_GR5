@@ -57,7 +57,7 @@ if (isset($_POST['submitt'])) {
     $debuto = $_POST['debut'];
     $fino = $_POST['fin'];
     if (!empty($_POST['id_use'])) {
-        foreach ($_POST['id_use'] as $id_user) {
+        for ($i = 0; $i < $nbre_users; $i++){
             $resultat = $controlleur_admin->rappeler_employe($id_user, $dateo, $debuto, $fino);
             // Vous pouvez ajouter ici un traitement pour `$resultat` si nécessaire
         }
@@ -66,6 +66,7 @@ if (isset($_POST['submitt'])) {
         $msg = "Aucun employé sélectionné.";
     }
 }
+
 ?>
 
 <div>
@@ -105,7 +106,9 @@ if (isset($_POST['submitt'])) {
             <?php if ($msg): ?><p><?php echo $msg; ?></p><?php endif; ?>
             <?php for ($n = 0; $n < $nbre_users; $n++): ?>
                 <label for="option<?php echo $n; ?>"><?php echo $users[$n]['identifiant']; ?></label>
-                <input type="checkbox" id="option<?php echo $n; ?>" name="id_use[]" value="<?php echo $users[$n]['id_employe']; ?>">
+                <input type="checkbox" id="option<?php echo $n; ?>" name="id_use<?php echo $n;?>" value="<?php
+                $controlleur_employe->get_id($users[$n]['identifiant']);
+                ?>">
             <?php endfor; ?>
             <input type="hidden" name="date" value="<?php echo $date; ?>">
             <input type="hidden" name="debut" value="<?php echo $debut; ?>">
